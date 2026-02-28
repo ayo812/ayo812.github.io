@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090a0d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="WxLayer" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>WxLayer V1</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar card">
+      <div>
+        <p class="kicker">WxLayer · V1</p>
+        <h1 id="locationName">Locating…</h1>
+      </div>
+      <button id="unitToggle" class="chip">°F</button>
+    </header>
+
+    <section id="alertCard" class="alert-banner hidden" aria-live="polite"></section>
+
+    <section class="layout-grid">
+      <article class="card now-card">
+        <h2>Now</h2>
+        <p id="currentTemp" class="big-temp">--°</p>
+        <p id="conditionText" class="subtle">Loading current conditions…</p>
+        <p id="feelsLike" class="subtle">Feels like --°</p>
+        <p id="updatedAt" class="tiny"></p>
+      </article>
+
+      <article class="card layer-card">
+        <h2>Layers + Gear</h2>
+        <div class="avatar" aria-hidden="true">
+          <span class="garment tee">Tee</span>
+          <span class="garment sweater">Sweater</span>
+          <span class="garment sweater2">Sweater 2</span>
+          <span class="garment puffer">Puffer</span>
+          <span class="garment raincoat">Rain Coat</span>
+        </div>
+        <p id="layerSummary" class="summary">Calculating recommendation…</p>
+        <ul id="gearList" class="gear-list"></ul>
+      </article>
+
+      <article class="card hourly-card">
+        <h2>Hourly</h2>
+        <div id="hourlyList" class="hourly-strip"></div>
+      </article>
+
+      <article class="card ten-day-card">
+        <h2>10 Day Forecast</h2>
+        <div id="tenDayList"></div>
+      </article>
+
+      <article class="card news-card">
+        <h2>Headlines</h2>
+        <div class="tabs">
+          <button class="tab active" data-feed="national">National</button>
+          <button class="tab" data-feed="nyc">NYC</button>
+          <button class="tab" data-feed="interesting">Interesting</button>
+        </div>
+        <p id="newsStatus" class="tiny">Loading…</p>
+        <ul id="headlineList" class="headline-list"></ul>
+      </article>
+    </section>
+  </main>
+
+  <template id="hourTemplate">
+    <div class="hour-item">
+      <p class="tiny hr-time"></p>
+      <p class="hr-temp"></p>
+      <p class="tiny hr-rain"></p>
+    </div>
+  </template>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
