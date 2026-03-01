@@ -38,9 +38,33 @@ const newsFeeds = {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   national: 'https://www.reddit.com/r/news/top.json?t=day&limit=10',
   nyc: 'https://www.reddit.com/r/nyc/top.json?t=day&limit=10',
   interesting: 'https://www.reddit.com/r/todayilearned/top.json?t=day&limit=10'
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
 =======
   national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
   nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
@@ -92,9 +116,21 @@ function layerTier(feelsLikeC) {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 function renderLayerInfo(feelsLikeC, precipProb) {
   const tier = layerTier(feelsLikeC);
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -121,6 +157,18 @@ function renderLayerInfo(feelsLikeC, precipProb) {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -138,6 +186,10 @@ function renderLayerInfo(feelsLikeC, precipProb) {
   if (tier === 2) gear.push('Tee', 'Black sweater', 'Jeans');
   if (tier === 3) gear.push('Tee', 'Black sweater', 'Black puffer', 'Jeans');
   if (tier === 4) gear.push('Tee', 'Black sweater', 'Extra sweater', 'Black puffer', 'Jeans');
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
@@ -165,6 +217,14 @@ function renderLayerInfo(feelsLikeC, precipProb) {
 >>>>>>> theirs
 =======
 >>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   if (rainy) gear.push('Black rain coat', 'Umbrella');
 
   ui.layerSummary.textContent = `${tier} layer${tier > 1 ? 's' : ''} recommended (walking profile)`;
@@ -175,6 +235,18 @@ function renderLayerInfo(feelsLikeC, precipProb) {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -284,9 +356,33 @@ function fallbackNews(feed) {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
     national: [{ title: 'Unable to load National feed right now.' }],
     nyc: [{ title: 'Unable to load NYC feed right now.' }],
     interesting: [{ title: 'Unable to load Interesting stories right now.' }]
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
 =======
     national: [{ title: 'Top stories temporarily unavailable.' }],
     nyc: [{ title: 'NYC stories temporarily unavailable.' }],
@@ -333,11 +429,23 @@ async function fetchNews(feed) {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
     const items = data.data?.children?.slice(0, 8).map((item) => ({
       title: item.data.title,
       url: item.data.url
     })) || [];
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -357,6 +465,18 @@ async function fetchNews(feed) {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -442,7 +562,23 @@ async function init() {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 init();
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
 =======
 init();
 >>>>>>> theirs

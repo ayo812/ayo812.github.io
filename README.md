@@ -24,3 +24,22 @@ Then open `http://localhost:4173`.
 - Open-Meteo Reverse Geocoding API
 - National Weather Service alerts API
 - RSS feeds via rss2json
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+
+
+## Download bundle
+- [⬇️ Download WxLayer-V1.zip](./WxLayer-V1.zip)
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs

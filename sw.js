@@ -30,7 +30,23 @@ self.addEventListener('fetch', (event) => {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 });
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs
 =======
 });
 >>>>>>> theirs
