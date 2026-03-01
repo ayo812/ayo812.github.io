@@ -24,4 +24,28 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request).catch(() => caches.match('./index.html')))
   );
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 });
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs
+=======
+});
+>>>>>>> theirs

@@ -1,4 +1,10 @@
 :root {
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   --radius: 18px;
   --shadow: 0 20px 42px rgba(0, 0, 0, 0.32);
   --bg-grad: radial-gradient(circle at top, #13182b 0%, #07080c 48%);
@@ -7,6 +13,41 @@
   --text: #ecf0ff;
   --muted: #9ca7c6;
   --accent: #79b7ff;
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+  --radius: 20px;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+  --bg-grad: radial-gradient(circle at 15% -10%, #304571 0%, #101425 42%, #090a0f 100%);
+  --card: rgba(19, 23, 35, 0.78);
+  --border: rgba(137, 164, 232, 0.2);
+  --text: #edf2ff;
+  --muted: #a2afcc;
+  --accent: #79c3ff;
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   --danger: #ff6d75;
 }
 
@@ -18,6 +59,12 @@ body {
   min-height: 100vh;
   background: var(--bg-grad);
   color: var(--text);
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 }
 
 .app-shell {
@@ -28,6 +75,44 @@ body {
 
 .card {
   background: var(--card);
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+  overflow-x: hidden;
+}
+
+.app-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.card {
+  background: linear-gradient(140deg, rgba(32, 39, 57, 0.78), var(--card));
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
@@ -36,6 +121,12 @@ body {
 }
 
 h1, h2, p { margin: 0; }
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 h1 { font-size: 1.2rem; }
 h2 { margin-bottom: 10px; font-size: 1rem; }
 
@@ -43,12 +134,70 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 .chip {
   border: 1px solid var(--border);
   background: transparent;
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+h1 { font-size: 1.16rem; }
+h2 { margin-bottom: 10px; font-size: 1rem; }
+
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.chip {
+  border: 1px solid var(--border);
+  background: rgba(24, 31, 46, 0.85);
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   color: var(--text);
   border-radius: 999px;
   padding: 8px 12px;
   font-weight: 600;
 }
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 .kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; }
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+>>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+>>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+>>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+>>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+>>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+>>>>>>> theirs
 .layout-grid { margin-top: 12px; display: grid; gap: 12px; }
 
 .alert-banner {
@@ -58,6 +207,12 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   background: color-mix(in srgb, var(--danger), transparent 86%);
   padding: 11px 12px;
   color: var(--text);
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   font-size: .95rem;
 }
 .hidden { display: none; }
@@ -77,10 +232,81 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 }
 .garment.active { opacity: 1; background: color-mix(in srgb, var(--accent), transparent 72%); }
 .garment.overlay { background: color-mix(in srgb, #58b7ff, transparent 70%); }
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+  font-size: .92rem;
+}
+.hidden { display: none; }
+
+.big-temp {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, #ffffff, #aed6ff);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.subtle { color: var(--muted); margin-top: 4px; }
+.tiny { color: var(--muted); font-size: .78rem; margin-top: 6px; }
+
+.avatar-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 8px;
+  padding: 8px;
+  border-radius: 14px;
+  background: radial-gradient(circle at top, rgba(121, 195, 255, 0.25), rgba(18, 23, 35, 0.35));
+}
+.avatar-figure {
+  width: 152px;
+  max-width: 100%;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.28));
+}
+.skin { fill: #ffd8bb; }
+.base-body { fill: #22283a; }
+.tee { fill: #f8f8ff; }
+.sweater, .sweater2 { fill: #1f2024; }
+.puffer { fill: #0f1114; }
+.raincoat { fill: #1f334f; stroke: #7dc1ff; stroke-width: 1.5; }
+.jeans { fill: #243a60; }
+.layer-vis { opacity: 0; transition: opacity .25s ease; }
+.layer-vis.active { opacity: .96; }
+.rain-layer.active { opacity: .9; }
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 
 .summary { margin-bottom: 8px; }
 .gear-list { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 4px; }
 
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 .hourly-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 3px; }
 .hour-item {
   min-width: 76px;
@@ -88,6 +314,44 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   border-radius: 11px;
   padding: 8px;
   background: color-mix(in srgb, var(--card), #000 8%);
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+.hourly-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.hour-item {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 8px;
+  text-align: center;
+  background: color-mix(in srgb, var(--card), #000 10%);
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 }
 .hr-temp { margin: 5px 0; font-weight: 700; }
 
@@ -103,12 +367,42 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 .tabs { display: flex; gap: 6px; margin-bottom: 8px; }
 .tab {
   border: 1px solid var(--border);
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   background: transparent;
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
   color: var(--muted);
   border-radius: 10px;
   padding: 7px;
   flex: 1;
 }
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 .tab.active { color: var(--text); background: color-mix(in srgb, var(--accent), transparent 75%); }
 
 .headline-list { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 8px; }
@@ -118,3 +412,40 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   .layout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .news-card, .hourly-card, .ten-day-card { grid-column: span 2; }
 }
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+.tab.active { color: var(--text); background: color-mix(in srgb, var(--accent), transparent 76%); }
+
+.headline-list { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 9px; }
+.headline-list a { color: color-mix(in srgb, var(--accent), var(--text) 30%); text-decoration: none; }
+
+@media (min-width: 700px) {
+  .layout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hourly-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .news-card, .hourly-card, .ten-day-card { grid-column: span 2; }
+}
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs

@@ -32,9 +32,45 @@ const weatherCodeMap = {
 };
 
 const newsFeeds = {
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   national: 'https://www.reddit.com/r/news/top.json?t=day&limit=10',
   nyc: 'https://www.reddit.com/r/nyc/top.json?t=day&limit=10',
   interesting: 'https://www.reddit.com/r/todayilearned/top.json?t=day&limit=10'
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
+=======
+  national: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
+  nyc: 'https://api.rss2json.com/v1/api.json?rss_url=https://rss.nytimes.com/services/xml/rss/nyt/NYRegion.xml',
+  interesting: 'https://api.rss2json.com/v1/api.json?rss_url=https://feeds.bbci.co.uk/news/science_and_environment/rss.xml'
+>>>>>>> theirs
 };
 
 const cToF = (c) => (c * 9) / 5 + 32;
@@ -50,14 +86,64 @@ function layerTier(feelsLikeC) {
   return 1;
 }
 
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 function renderLayerInfo(feelsLikeC, precipProb) {
   const tier = layerTier(feelsLikeC);
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+function updateAvatar(tier, rainy) {
+  document.querySelectorAll('.layer-vis').forEach((el) => el.classList.remove('active'));
+  for (let i = 1; i <= tier; i += 1) {
+    document.querySelector(`.layer-${i}`)?.classList.add('active');
+  }
+  if (rainy) document.querySelector('.rain-layer')?.classList.add('active');
+}
+
+function renderLayerInfo(feelsLikeC, precipProb) {
+  const tier = layerTier(feelsLikeC);
+  const rainy = precipProb > 40;
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   const gear = [];
 
   if (tier === 1) gear.push('Tee', 'Shorts or jeans');
   if (tier === 2) gear.push('Tee', 'Black sweater', 'Jeans');
   if (tier === 3) gear.push('Tee', 'Black sweater', 'Black puffer', 'Jeans');
   if (tier === 4) gear.push('Tee', 'Black sweater', 'Extra sweater', 'Black puffer', 'Jeans');
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   if (precipProb > 40) gear.push('Black rain coat', 'Umbrella');
 
   ui.layerSummary.textContent = `${tier} layer${tier > 1 ? 's' : ''} recommended (walking profile)`;
@@ -68,6 +154,38 @@ function renderLayerInfo(feelsLikeC, precipProb) {
     document.querySelector(`.garment.${name}`)?.classList.add('active');
   });
   if (precipProb > 40) document.querySelector('.garment.raincoat')?.classList.add('active', 'overlay');
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+  if (rainy) gear.push('Black rain coat', 'Umbrella');
+
+  ui.layerSummary.textContent = `${tier} layer${tier > 1 ? 's' : ''} recommended (walking profile)`;
+  ui.gearList.innerHTML = gear.map((g) => `<li>${g}</li>`).join('');
+  updateAvatar(tier, rainy);
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 }
 
 function renderWeather(data, locationLabel) {
@@ -160,9 +278,45 @@ async function fetchNwsAlerts(lat, lon) {
 
 function fallbackNews(feed) {
   return {
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
     national: [{ title: 'Unable to load National feed right now.' }],
     nyc: [{ title: 'Unable to load NYC feed right now.' }],
     interesting: [{ title: 'Unable to load Interesting stories right now.' }]
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
+=======
+    national: [{ title: 'Top stories temporarily unavailable.' }],
+    nyc: [{ title: 'NYC stories temporarily unavailable.' }],
+    interesting: [{ title: 'Interesting stories temporarily unavailable.' }]
+>>>>>>> theirs
   }[feed];
 }
 
@@ -173,10 +327,47 @@ async function fetchNews(feed) {
     const res = await fetch(newsFeeds[feed]);
     if (!res.ok) throw new Error('News request failed');
     const data = await res.json();
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
     const items = data.data?.children?.slice(0, 8).map((item) => ({
       title: item.data.title,
       url: item.data.url
     })) || [];
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+    const items = (data.items || []).slice(0, 6).map((item) => ({
+      title: item.title,
+      url: item.link
+    }));
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
     const list = items.length ? items : fallbackNews(feed);
     ui.headlineList.innerHTML = list
       .map((item) => item.url
@@ -245,4 +436,28 @@ async function init() {
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 init();
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
+=======
+init();
+>>>>>>> theirs
