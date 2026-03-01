@@ -27,7 +27,16 @@ Then open `http://localhost:4173`.
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -36,6 +45,30 @@ Then open `http://localhost:4173`.
 
 ## Download bundle
 - [⬇️ Download WxLayer-V1.zip](./WxLayer-V1.zip)
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+
+
+## Troubleshooting (if app shows `<<<<<<<` / `>>>>>>>`)
+That means your local files have unresolved Git merge-conflict markers.
+
+Fastest fix:
+1. Delete local copies of `index.html`, `styles.css`, `app.js`, `sw.js`, and `manifest.webmanifest`.
+2. Extract `WxLayer-V1.zip` from this repo root and overwrite files.
+3. In GitHub Desktop, commit the clean files and push.
 <<<<<<< ours
 <<<<<<< ours
 >>>>>>> theirs

@@ -9,6 +9,9 @@
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   --radius: 18px;
   --shadow: 0 20px 42px rgba(0, 0, 0, 0.32);
   --bg-grad: radial-gradient(circle at top, #13182b 0%, #07080c 48%);
@@ -18,6 +21,12 @@
   --muted: #9ca7c6;
   --accent: #79b7ff;
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -53,6 +62,15 @@
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -93,6 +111,9 @@ body {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 }
 
 .app-shell {
@@ -104,6 +125,12 @@ body {
 .card {
   background: var(--card);
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -142,6 +169,15 @@ body {
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -179,6 +215,9 @@ h1, h2, p { margin: 0; }
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 h1 { font-size: 1.2rem; }
 h2 { margin-bottom: 10px; font-size: 1rem; }
 
@@ -205,10 +244,19 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 >>>>>>> theirs
 =======
 >>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 h1 { font-size: 1.16rem; }
 h2 { margin-bottom: 10px; font-size: 1rem; }
 
 .topbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
@@ -235,6 +283,12 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 =======
 >>>>>>> theirs
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -245,6 +299,15 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   background: rgba(24, 31, 46, 0.85);
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -255,6 +318,9 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   padding: 8px 12px;
   font-weight: 600;
 }
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
@@ -299,6 +365,18 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 .kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
 .download-btn { text-decoration: none; display: inline-flex; align-items: center; }
 >>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+.download-btn { text-decoration: none; display: inline-flex; align-items: center; }
+>>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+.download-btn { text-decoration: none; display: inline-flex; align-items: center; }
+>>>>>>> theirs
+=======
+.kicker { color: var(--muted); font-size: .78rem; margin-bottom: 4px; letter-spacing: 0.03em; }
+.download-btn { text-decoration: none; display: inline-flex; align-items: center; }
+>>>>>>> theirs
 .layout-grid { margin-top: 12px; display: grid; gap: 12px; }
 
 .alert-banner {
@@ -308,6 +386,9 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   background: color-mix(in srgb, var(--danger), transparent 86%);
   padding: 11px 12px;
   color: var(--text);
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
@@ -338,6 +419,12 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 .garment.active { opacity: 1; background: color-mix(in srgb, var(--accent), transparent 72%); }
 .garment.overlay { background: color-mix(in srgb, #58b7ff, transparent 70%); }
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -403,6 +490,15 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -436,6 +532,9 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 .hourly-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 3px; }
 .hour-item {
   min-width: 76px;
@@ -444,6 +543,12 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   padding: 8px;
   background: color-mix(in srgb, var(--card), #000 8%);
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -482,6 +587,15 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
@@ -526,7 +640,19 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   background: transparent;
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
+=======
+  background: rgba(19, 24, 36, .6);
+>>>>>>> theirs
 =======
   background: rgba(19, 24, 36, .6);
 >>>>>>> theirs
@@ -572,6 +698,9 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
 .tab.active { color: var(--text); background: color-mix(in srgb, var(--accent), transparent 75%); }
 
 .headline-list { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 8px; }
@@ -582,6 +711,12 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
   .news-card, .hourly-card, .ten-day-card { grid-column: span 2; }
 }
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
 =======
 >>>>>>> theirs
 =======
@@ -619,6 +754,15 @@ h2 { margin-bottom: 10px; font-size: 1rem; }
 <<<<<<< ours
 <<<<<<< ours
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
 =======
 >>>>>>> theirs
