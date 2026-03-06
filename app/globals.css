@@ -1,0 +1,754 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg: #fffbf0;
+  --ink: #1a1a2e;
+  --accent: #ff5733;
+  --accent-soft: #ffe8e3;
+  --gold: #f5a623;
+  --gold-soft: #fff6e0;
+  --green: #2ecc71;
+  --green-soft: #e8fff3;
+  --mid: #6b6b8a;
+  --border: #e8e0d0;
+  --white: #ffffff;
+  --shadow: 0 24px 70px rgba(26, 26, 46, 0.08);
+  --font-fraunces: "Fraunces";
+  --font-dm-sans: "DM Sans";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(245, 166, 35, 0.17), transparent 25rem),
+    radial-gradient(circle at top right, rgba(255, 87, 51, 0.12), transparent 28rem),
+    var(--bg);
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.shell {
+  width: min(100%, 46rem);
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0 0.75rem;
+  background: linear-gradient(180deg, rgba(255, 251, 240, 0.96), rgba(255, 251, 240, 0.84), transparent);
+  backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.nav-logo span {
+  color: var(--accent);
+}
+
+.page {
+  padding: 1rem 0 2rem;
+}
+
+.pre-hero,
+.prev-hunt-card,
+.submitted-banner,
+.submitted-status-card,
+.email-signup-card,
+.preview-panel,
+.empty-slab,
+.admin-card,
+.upload-zone,
+.submit-count,
+.closed-banner,
+.leaderboard-stack,
+.history-stack {
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.pre-hero {
+  text-align: center;
+  padding: 2rem 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.eyebrow,
+.section-label,
+.countdown-label,
+.live-badge,
+.submit-count-label,
+.lb-wins-label,
+.field-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.eyebrow.waiting {
+  color: var(--gold);
+  background: var(--gold-soft);
+  border: 1px solid rgba(245, 166, 35, 0.35);
+}
+
+.eyebrow.closed {
+  color: var(--mid);
+  background: rgba(107, 107, 138, 0.08);
+  border: 1px solid rgba(107, 107, 138, 0.2);
+}
+
+.hero-title,
+.hunt-goal,
+.lb-title,
+.closed-title {
+  margin: 0;
+  font-family: var(--font-fraunces), serif;
+  font-weight: 900;
+  line-height: 1.02;
+}
+
+.hero-title {
+  font-size: clamp(2.3rem, 10vw, 3.5rem);
+}
+
+.hero-title em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.hero-sub,
+.countdown-sub,
+.upload-sub,
+.cta-card-sub,
+.email-signup-sub,
+.lb-sub,
+.runner-time,
+.history-meta,
+.history-pill,
+.preview-copy,
+.admin-message,
+.suggestion-meta,
+.submitted-note,
+.hunt-hint,
+.email-note,
+.submitted-time,
+.prev-hunt-date {
+  color: var(--mid);
+}
+
+.hero-sub,
+.lb-sub {
+  margin: 0.9rem auto 1.5rem;
+  max-width: 32rem;
+  line-height: 1.6;
+}
+
+.countdown-box,
+.next-hunt-box {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 1.25rem 1.6rem;
+  border-radius: 1rem;
+  background: var(--white);
+  border: 2px solid var(--border);
+}
+
+.countdown-time,
+.submit-count-num,
+.submitted-countdown,
+.next-hunt-time {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.countdown-time {
+  font-size: clamp(2.4rem, 12vw, 3.5rem);
+}
+
+.prev-hunt-card,
+.email-signup-card,
+.preview-panel,
+.admin-card,
+.empty-slab,
+.submitted-status-card,
+.submit-count {
+  padding: 1.1rem;
+  margin-top: 1rem;
+}
+
+.prev-hunt-header,
+.runner-row,
+.lb-row,
+.history-row,
+.suggestion-row,
+.submit-count,
+.cta-card,
+.preview-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.prev-hunt-header {
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.prev-hunt-title,
+.cta-card-title,
+.email-signup-title,
+.upload-title,
+.winner-name,
+.podium-name,
+.history-title,
+.suggestion-title {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 700;
+}
+
+.winners-row,
+.podium,
+.preview-buttons,
+.upload-rules,
+.lb-tabs,
+.admin-grid,
+.suggestion-stack,
+.runner-list,
+.history-stack,
+.leaderboard-stack {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.winners-row,
+.preview-buttons {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.winner-card,
+.podium-card,
+.lb-row,
+.runner-row,
+.history-row,
+.suggestion-row {
+  border-radius: 1rem;
+  border: 1.5px solid var(--border);
+  background: rgba(255, 251, 240, 0.75);
+}
+
+.winner-card,
+.podium-card {
+  padding: 0.85rem;
+  text-align: center;
+}
+
+.winner-img,
+.podium-photo,
+.lb-avatar,
+.runner-photo {
+  display: grid;
+  place-items: center;
+  background: var(--border);
+}
+
+.winner-img,
+.podium-photo {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 0.9rem;
+  font-size: 2rem;
+  margin-bottom: 0.6rem;
+}
+
+.winner-medal,
+.podium-num,
+.lb-position,
+.runner-rank {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 900;
+}
+
+.winner-time,
+.podium-time {
+  font-size: 0.78rem;
+}
+
+.hunt-banner {
+  position: relative;
+  overflow: hidden;
+  padding: 1.4rem;
+  border-radius: 1.3rem;
+  margin-bottom: 1rem;
+  color: white;
+  background: linear-gradient(135deg, #ff5733, #ff7a42 58%, #ff9c55);
+  box-shadow: 0 26px 70px rgba(255, 87, 51, 0.28);
+}
+
+.hunt-banner::after {
+  content: "??";
+  position: absolute;
+  right: 1rem;
+  bottom: -0.2rem;
+  font-size: 4rem;
+  opacity: 0.18;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.live-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: white;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.hunt-goal {
+  margin-top: 0.9rem;
+  font-size: clamp(2rem, 9vw, 2.7rem);
+}
+
+.hunt-timer {
+  margin-top: 0.35rem;
+}
+
+.hunt-timer strong {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.1rem;
+}
+
+.hunt-hint {
+  margin: 0.9rem 0 0;
+  max-width: 20rem;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.upload-zone {
+  cursor: pointer;
+  border-style: dashed;
+  border-width: 2.5px;
+  text-align: center;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.upload-zone:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  background: linear-gradient(180deg, rgba(255, 232, 227, 0.7), rgba(255, 255, 255, 0.92));
+}
+
+.upload-zone--busy {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.upload-icon,
+.submitted-icon,
+.cta-card-icon {
+  font-size: 2rem;
+}
+
+.upload-title,
+.submitted-title {
+  font-size: 1.3rem;
+  margin-bottom: 0.35rem;
+}
+
+.upload-rules {
+  grid-template-columns: 1fr;
+}
+
+.rule-chip {
+  border-radius: 999px;
+  padding: 0.6rem 0.8rem;
+  background: var(--green-soft);
+  border: 1px solid rgba(46, 204, 113, 0.22);
+  color: #1d8649;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.submit-count-num,
+.submitted-countdown {
+  font-size: 1.8rem;
+}
+
+.upload-status {
+  font-size: 0.86rem;
+  line-height: 1.4;
+  text-align: right;
+  max-width: 12rem;
+}
+
+.upload-status--error {
+  color: #b4432c;
+}
+
+.upload-status--locked {
+  color: #1f8b4d;
+}
+
+.submitted-banner {
+  padding: 1.4rem 1.2rem;
+  text-align: center;
+  background: linear-gradient(180deg, var(--green-soft), rgba(255, 255, 255, 0.98));
+}
+
+.submitted-title {
+  color: #1c8448;
+}
+
+.cta-card {
+  margin-top: 1rem;
+  padding: 1rem 1.05rem;
+  border-radius: 1rem;
+  border: 2px solid var(--border);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.cta-card--tight {
+  margin-top: 0.9rem;
+}
+
+.cta-card-arrow {
+  color: var(--mid);
+  font-size: 1.1rem;
+}
+
+.email-row,
+.unlock-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.email-input,
+.text-field,
+.text-area {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: rgba(255, 251, 240, 0.75);
+  color: var(--ink);
+}
+
+.text-area {
+  border-radius: 1rem;
+  resize: vertical;
+}
+
+.email-input:focus,
+.text-field:focus,
+.text-area:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pill-btn,
+.preview-btn,
+.lb-tab {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.82rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pill-btn {
+  background: var(--accent);
+  color: white;
+}
+
+.preview-btn,
+.lb-tab {
+  background: var(--white);
+  border: 2px solid var(--border);
+  color: var(--mid);
+}
+
+.preview-btn.active,
+.lb-tab.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+
+.runner-row,
+.lb-row,
+.history-row,
+.suggestion-row {
+  padding: 0.9rem 1rem;
+}
+
+.runner-rank,
+.lb-position {
+  min-width: 2rem;
+}
+
+.runner-photo,
+.lb-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.8rem;
+}
+
+.lb-avatar {
+  border-radius: 999px;
+}
+
+.lb-title {
+  font-size: clamp(2.1rem, 10vw, 3rem);
+}
+
+.lb-tabs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 1rem;
+}
+
+.lb-name-wrap {
+  flex: 1;
+}
+
+.lb-name {
+  font-weight: 700;
+}
+
+.lb-helper {
+  color: var(--mid);
+  font-size: 0.82rem;
+}
+
+.lb-wins {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  text-align: right;
+}
+
+.lb-row.top {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  color: var(--mid);
+  font-weight: 700;
+}
+
+.empty-slab {
+  padding: 1.5rem;
+}
+
+.empty-slab--centered {
+  max-width: 28rem;
+  margin: 5rem auto 0;
+  text-align: center;
+}
+
+.history-stack,
+.leaderboard-stack,
+.suggestion-stack {
+  margin-top: 1rem;
+}
+
+.history-pill {
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.82rem;
+  text-transform: capitalize;
+  background: rgba(107, 107, 138, 0.1);
+}
+
+.history-pill--top-5 {
+  color: var(--gold);
+  background: var(--gold-soft);
+}
+
+.history-pill--submitted {
+  color: #1f8b4d;
+  background: var(--green-soft);
+}
+
+.history-pill--rejected {
+  color: #b4432c;
+  background: rgba(255, 87, 51, 0.12);
+}
+
+.admin-grid {
+  grid-template-columns: 1fr;
+}
+
+.field-label {
+  display: block;
+  margin: 1rem 0 0.4rem;
+  color: var(--mid);
+}
+
+.suggestion-row {
+  align-items: flex-start;
+}
+
+.preview-panel {
+  margin-top: 1rem;
+  align-items: flex-start;
+}
+
+.preview-buttons {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+}
+
+@media (min-width: 700px) {
+  .shell {
+    width: min(100%, 48rem);
+    padding-inline: 1.25rem;
+  }
+
+  .winners-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .upload-rules {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .preview-buttons {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .email-row,
+  .unlock-form,
+  .preview-panel,
+  .prev-hunt-header,
+  .submit-count,
+  .runner-row,
+  .lb-row,
+  .history-row,
+  .cta-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .winners-row,
+  .lb-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .upload-status,
+  .runner-time,
+  .lb-wins {
+    text-align: left;
+  }
+}
+
+
+.auth-card {
+  margin-top: 1rem;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.pill-btn--secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: white;
+}
+.admin-inline-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.admin-inline-actions--stacked {
+  flex-direction: column;
+  align-items: stretch;
+}
