@@ -1,310 +1,154 @@
-<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#090a0d" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="WxLayer" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="assets/icon-192.png" />
-  <link rel="stylesheet" href="styles.css" />
-  <title>WxLayer V1</title>
-</head>
-<body>
-  <main class="app-shell">
-    <header class="topbar card">
-      <div>
-        <p class="kicker">WxLayer · V1</p>
-        <h1 id="locationName">Locating…</h1>
-      </div>
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-      <button id="unitToggle" class="chip">°F</button>
-=======
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-      <div class="top-actions">
-        <a href="./WxLayer-V1.zip" download class="chip download-btn">⬇ ZIP</a>
-        <button id="unitToggle" class="chip">°F</button>
-      </div>
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-    </header>
-
-    <section id="alertCard" class="alert-banner hidden" aria-live="polite"></section>
-
-    <section class="layout-grid">
-      <article class="card now-card">
-        <h2>Now</h2>
-        <p id="currentTemp" class="big-temp">--°</p>
-        <p id="conditionText" class="subtle">Loading current conditions…</p>
-        <p id="feelsLike" class="subtle">Feels like --°</p>
-        <p id="updatedAt" class="tiny"></p>
-      </article>
-
-      <article class="card layer-card">
-        <h2>Layers + Gear</h2>
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-        <div class="avatar" aria-hidden="true">
-          <span class="garment tee">Tee</span>
-          <span class="garment sweater">Sweater</span>
-          <span class="garment sweater2">Sweater 2</span>
-          <span class="garment puffer">Puffer</span>
-          <span class="garment raincoat">Rain Coat</span>
-=======
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-        <div class="avatar-wrap" aria-hidden="true">
-          <svg class="avatar-figure" viewBox="0 0 180 220" role="img" aria-label="Outfit avatar">
-            <circle cx="90" cy="42" r="24" class="skin"/>
-            <rect x="58" y="66" width="64" height="110" rx="26" class="base-body"/>
-            <rect x="52" y="72" width="76" height="96" rx="24" class="tee layer-vis layer-1"/>
-            <rect x="48" y="72" width="84" height="106" rx="26" class="sweater layer-vis layer-2"/>
-            <rect x="44" y="72" width="92" height="112" rx="30" class="sweater2 layer-vis layer-3"/>
-            <rect x="36" y="64" width="108" height="126" rx="34" class="puffer layer-vis layer-4"/>
-            <rect x="30" y="60" width="120" height="136" rx="38" class="raincoat layer-vis rain-layer"/>
-            <rect x="63" y="170" width="23" height="42" rx="9" class="jeans"/>
-            <rect x="94" y="170" width="23" height="42" rx="9" class="jeans"/>
-          </svg>
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Yoav Got Mail Dashboard</title>
+    <meta
+      name="description"
+      content="Analytics hub and note suggestion machine for Yoav Got Mail."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./app.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <div class="shell">
+      <header class="hero" id="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">Public signal dashboard</p>
+          <h1>Loading your Substack intelligence...</h1>
+          <p class="hero__lede">
+            Pulling publication analytics, note performance, and idea prompts.
+          </p>
         </div>
-        <p id="layerSummary" class="summary">Calculating recommendation…</p>
-        <ul id="gearList" class="gear-list"></ul>
-      </article>
+      </header>
 
-      <article class="card hourly-card">
-        <h2>Hourly</h2>
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-        <div id="hourlyList" class="hourly-strip"></div>
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-=======
-        <div id="hourlyList" class="hourly-grid"></div>
->>>>>>> theirs
-      </article>
+      <main class="layout">
+        <section class="panel panel--wide">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Pulse</p>
+              <h2>Publication overview</h2>
+            </div>
+            <p class="panel__hint" id="build-status">Waiting for data</p>
+          </div>
+          <div class="metric-grid" id="metrics"></div>
+        </section>
 
-      <article class="card ten-day-card">
-        <h2>10 Day Forecast</h2>
-        <div id="tenDayList"></div>
-      </article>
+        <section class="panel">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Themes</p>
+              <h2>Topic stack</h2>
+            </div>
+          </div>
+          <div class="stack-list" id="topics"></div>
+        </section>
 
-      <article class="card news-card">
-        <h2>Headlines</h2>
-        <div class="tabs">
-          <button class="tab active" data-feed="national">National</button>
-          <button class="tab" data-feed="nyc">NYC</button>
-          <button class="tab" data-feed="interesting">Interesting</button>
-        </div>
-        <p id="newsStatus" class="tiny">Loading…</p>
-        <ul id="headlineList" class="headline-list"></ul>
-      </article>
-    </section>
-  </main>
+        <section class="panel">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Formats</p>
+              <h2>Outside note patterns</h2>
+            </div>
+          </div>
+          <div class="format-grid" id="formats"></div>
+        </section>
 
-  <template id="hourTemplate">
-    <div class="hour-item">
-      <p class="tiny hr-time"></p>
-      <p class="hr-temp"></p>
-      <p class="tiny hr-rain"></p>
+        <section class="panel panel--wide">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Machine</p>
+              <h2>What notes to post next</h2>
+            </div>
+            <p class="panel__hint">Built from your recent posts plus watched feeds</p>
+          </div>
+          <div class="suggestion-list" id="suggestions"></div>
+        </section>
+
+        <section class="panel panel--wide">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Leaderboard</p>
+              <h2>Post analysis</h2>
+            </div>
+            <p class="panel__hint">Reaction, restack, and note coverage signals</p>
+          </div>
+          <div class="table-shell">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Post</th>
+                  <th>Theme</th>
+                  <th>Score</th>
+                  <th>Coverage</th>
+                </tr>
+              </thead>
+              <tbody id="posts"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Calendar</p>
+              <h2>Publishing rhythm</h2>
+            </div>
+          </div>
+          <div class="calendar-list" id="calendar"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Watchlist</p>
+              <h2>External note radar</h2>
+            </div>
+          </div>
+          <div class="watchlist" id="watchlist"></div>
+        </section>
+
+        <section class="panel panel--wide">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">History</p>
+              <h2>Your recent notes</h2>
+            </div>
+            <p class="panel__hint">Use this to avoid repeating the same hook</p>
+          </div>
+          <div class="history-list" id="notes"></div>
+        </section>
+
+        <section class="panel panel--wide panel--footer">
+          <div class="panel__head">
+            <div>
+              <p class="eyebrow">Refresh</p>
+              <h2>Update the snapshot</h2>
+            </div>
+          </div>
+          <p class="footer-copy" id="refresh-command"></p>
+        </section>
+      </main>
     </div>
-  </template>
 
-  <script type="module" src="app.js"></script>
-</body>
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
+    <template id="empty-state">
+      <div class="empty-state">
+        <p>No data available yet.</p>
+      </div>
+    </template>
+
+    <script src="./data/dashboard.js"></script>
+    <script src="./app.js" defer></script>
+  </body>
 </html>
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
-=======
-</html>
->>>>>>> theirs
+

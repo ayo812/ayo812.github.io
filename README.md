@@ -1,78 +1,36 @@
-# WxLayer (ayo812.github.io)
+# Yoav Got Mail Dashboard
 
-WxLayer V1 is a mobile-first weather PWA tuned for iPhone home-screen use.
+Static analytics hub and note suggestion machine for `https://yoavgotmail.substack.com/`.
 
-## V1 features
-- Current GPS weather via Open-Meteo
-- Reverse geocoded location labels
-- NWS active alert banner at top priority
-- Hourly + 10-day forecast with precipitation probabilities
-- Feels-like layer recommendations with avatar outfit visualization
-- Headlines tabs for National / NYC / Interesting
-- F/C toggle
-- Offline snapshot fallback + service-worker shell cache
-- Mobile-friendly vertical layout (no horizontal page scrolling)
+## What it does
 
-## Run locally
-```bash
-python -m http.server 4173
+- Pulls public publication metadata and the RSS feed.
+- Pulls public profile activity, including notes and post activity.
+- Pulls public activity from a configurable watchlist of other Substacks.
+- Builds a static `data/dashboard.json` snapshot for GitHub Pages.
+- Shows note prompts, draft note copy, post coverage, timing slots, and watchlist patterns.
+
+## Refresh the data
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-data.ps1
 ```
-Then open `http://localhost:4173`.
 
-## APIs
-- Open-Meteo Forecast API
-- Open-Meteo Reverse Geocoding API
-- National Weather Service alerts API
-- RSS feeds via rss2json
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-=======
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
+The script reads `config/watchlist.json` and writes `data/dashboard.json`.
 
+## Customize the watchlist
 
-## Download bundle
-- [⬇️ Download WxLayer-V1.zip](./WxLayer-V1.zip)
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
+Edit `config/watchlist.json` and add more Substack handles:
 
+```json
+{
+  "handles": [
+    { "handle": "on", "label": "On Substack" },
+    { "handle": "examplewriter", "label": "Example Writer" }
+  ]
+}
+```
 
-## Troubleshooting (if app shows `<<<<<<<` / `>>>>>>>`)
-That means your local files have unresolved Git merge-conflict markers.
+## Deploy
 
-Fastest fix:
-1. Delete local copies of `index.html`, `styles.css`, `app.js`, `sw.js`, and `manifest.webmanifest`.
-2. Extract `WxLayer-V1.zip` from this repo root and overwrite files.
-3. In GitHub Desktop, commit the clean files and push.
-<<<<<<< ours
-<<<<<<< ours
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
+This repo is static. Push it to GitHub and enable GitHub Pages from the root branch.
