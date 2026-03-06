@@ -1,12 +1,13 @@
 # Scaveng.io
 
-Mobile-first daily scavenger hunt alpha built with Next.js App Router. The app now supports a real Supabase-backed path for auth, data, uploads, AI suggestion generation, AI moderation, and reminder delivery, while still falling back to an in-memory repository when backend environment is missing.
+Mobile-first daily scavenger hunt alpha built with Next.js App Router. The app supports a real Supabase-backed path for auth, data, uploads, AI suggestion generation, AI moderation, and reminder delivery, while still falling back to an in-memory repository when backend environment is missing.
 
 ## What is implemented
 
 - Mobile-first home flow for all five game states: `waiting`, `live`, `submitted`, `results-soon`, `results-out`
 - Camera-first upload UX with client-side image compression and a real image payload sent to the finalize API
 - One-submission-per-hunt locking through either Supabase or the demo repository
+- EXIF-based freshness verification with manual-review fallback when metadata is missing or conflicting
 - Contextual leaderboard CTA, reminder card, `/leaderboard`, `/history`, and protected `/admin` routes
 - Magic-link auth APIs and callback handling for passwordless sign-in
 - Admin AI suggestion generation, flagged-submission review, and result publication
@@ -21,7 +22,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 SUPABASE_STORAGE_BUCKET=submissions
-SCAVENG_ADMIN_SECRET=
+SCAVENG_ADMIN_EMAILS=admin@example.com,other-admin@example.com
 OPENAI_API_KEY=
 OPENAI_MODERATION_MODEL=gpt-4.1-mini
 OPENAI_SUGGESTION_MODEL=gpt-4.1-mini
@@ -36,6 +37,8 @@ If `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, or `SUPABASE_SER
 If `OPENAI_API_KEY` is missing, admin suggestion generation falls back to canned suggestions and submission moderation falls back to basic mime/type checks.
 
 If `RESEND_API_KEY` or `RESEND_FROM_EMAIL` is missing, `/api/cron/reminders` will skip delivery without crashing.
+
+Admin access requires a valid Supabase session whose email is listed in `SCAVENG_ADMIN_EMAILS`, or a Supabase user with `app_metadata.role=admin` / `app_metadata.is_admin=true`.
 
 ## Setup
 
@@ -69,5 +72,4 @@ If `CRON_SECRET` is unset, the cron route accepts unauthenticated local requests
 
 - The real repository uses the Supabase service role on the server to query hunts, submissions, results, challenge suggestions, and reminder recipients.
 - Guest identity is created in middleware and stored in a cookie.
-- Admin protection uses a simple secret-backed cookie unlock flow for now.
 - Development preview states still work even when Supabase is configured; those routes intentionally keep the mock path for state forcing.

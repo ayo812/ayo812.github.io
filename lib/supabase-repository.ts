@@ -1,5 +1,6 @@
 import { moderateSubmissionImage, generateChallengeSuggestions as generateSuggestionsWithOpenAI } from "@/lib/openai";
 import { deriveHomeState, formatFriendlyDate } from "@/lib/time";
+import { verifySubmissionTiming } from "@/lib/submission-verification";
 import { getSupabaseAdminClient } from "@/lib/supabase/client";
 import {
   type AdminDashboardData,
@@ -179,7 +180,7 @@ function submissionFromRow(row: Row): Submission {
     moderationStatus: (row.moderation_status as Submission["moderationStatus"]) ?? "pending",
     verificationStatus: (row.verification_status as Submission["verificationStatus"]) ?? "pending",
     reviewNotes: row.review_notes ? String(row.review_notes) : undefined,
-    uploadState: row.accepted_at ? "accepted" : row.verification_status === "rejected" || row.moderation_status === "blocked" ? "rejected" : "pending"
+    uploadState: row.verification_status === "rejected" || row.moderation_status === "blocked" ? "rejected" : row.accepted_at ? "accepted" : "pending"
   };
 }
 
@@ -468,25 +469,26 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput & { imag
     throw upload.error;
   }
 
-  const capturedAtMs = input.capturedAt ? new Date(input.capturedAt).getTime() : NaN;
-  const dropAtMs = new Date(String(huntRow.drop_at)).getTime();
-  const closeAtMs = new Date(String(huntRow.closes_at)).getTime();
-  const withinWindow = Number.isFinite(capturedAtMs) && capturedAtMs >= dropAtMs && capturedAtMs <= closeAtMs;
+  const verification = await verifySubmissionTiming({
+    imageBuffer: parsed.buffer,
+    clientCapturedAt: input.capturedAt,
+    dropAt: String(huntRow.drop_at),
+    closesAt: String(huntRow.closes_at)
+  });
 
   let moderationStatus: Submission["moderationStatus"] = parsed.mimeType.startsWith("image/") ? "approved" : "blocked";
-  let reviewNotes = "Basic mime/type checks completed.";
+  let reviewNotes = verification.reviewNotes;
   try {
     const moderation = await moderateSubmissionImage({
       challenge: String(huntRow.challenge ?? "Daily scavenger hunt"),
       imageDataUrl: input.imageDataUrl
     });
     moderationStatus = moderation.moderationStatus;
-    reviewNotes = moderation.reviewNotes;
+    reviewNotes = `${verification.reviewNotes} ${moderation.reviewNotes}`.trim();
   } catch (error) {
-    reviewNotes = error instanceof Error ? `OpenAI moderation unavailable: ${error.message}` : "OpenAI moderation unavailable.";
+    reviewNotes = `${verification.reviewNotes} ${error instanceof Error ? `OpenAI moderation unavailable: ${error.message}` : "OpenAI moderation unavailable."}`.trim();
   }
 
-  const verificationStatus = withinWindow ? "verified" : "needs_manual_review";
   const { data, error } = await admin.from("submissions").update({
     file_name: input.fileName,
     mime_type: parsed.mimeType,
@@ -494,10 +496,10 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput & { imag
     width: input.width,
     height: input.height,
     storage_path: storagePath,
-    captured_at: input.capturedAt ?? null,
+    captured_at: verification.chosenCapturedAt ?? input.capturedAt ?? null,
     accepted_at: new Date().toISOString(),
     moderation_status: moderationStatus,
-    verification_status: verificationStatus,
+    verification_status: verification.verificationStatus,
     review_notes: reviewNotes
   }).eq("id", input.submissionId).select("*").single();
 

@@ -1,4 +1,5 @@
 import { deriveGuestAlias } from "@/lib/identity";
+import { verifySubmissionTiming } from "@/lib/submission-verification";
 import { deriveHomeState } from "@/lib/time";
 import {
   type AdminDashboardData,
@@ -286,12 +287,12 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput) {
   }
 
   const hunt = buildHunt(state.previewState === "waiting" ? "live" : state.previewState);
-  const capturedAtMs = input.capturedAt ? new Date(input.capturedAt).getTime() : NaN;
-  const dropAtMs = new Date(hunt.dropAt).getTime();
-  const closeAtMs = new Date(hunt.closesAt).getTime();
-  const withinWindow = Number.isFinite(capturedAtMs) && capturedAtMs >= dropAtMs && capturedAtMs <= closeAtMs;
-
-  const verificationStatus = withinWindow ? "verified" : "needs_manual_review";
+  const verification = await verifySubmissionTiming({
+    imageBuffer: Buffer.from(input.imageDataUrl.split(",").at(-1) ?? "", "base64"),
+    clientCapturedAt: input.capturedAt,
+    dropAt: hunt.dropAt,
+    closesAt: hunt.closesAt
+  });
   const moderationStatus = input.mimeType.startsWith("image/") ? "approved" : "blocked";
 
   const accepted: Submission = {
@@ -301,11 +302,12 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput) {
     fileSize: input.fileSize,
     width: input.width,
     height: input.height,
-    capturedAt: input.capturedAt,
+    capturedAt: verification.chosenCapturedAt ?? input.capturedAt,
     acceptedAt: new Date().toISOString(),
     moderationStatus,
-    verificationStatus,
-    uploadState: moderationStatus === "blocked" ? "rejected" : "accepted"
+    verificationStatus: verification.verificationStatus,
+    reviewNotes: verification.reviewNotes,
+    uploadState: moderationStatus === "blocked" || verification.verificationStatus === "rejected" ? "rejected" : "accepted"
   };
 
   state.submissions.set(input.submissionId, accepted);

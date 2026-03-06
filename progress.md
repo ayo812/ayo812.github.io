@@ -22,3 +22,11 @@ Original prompt: PLEASE IMPLEMENT THIS PLAN for scaveng.io as a mobile-first Nex
 - Extended both repository implementations with challenge suggestion generation and reminder-recipient listing, and upgraded Supabase finalization to use OpenAI moderation when available.
 - Added admin suggestion generation and reminder cron routes, and upgraded the admin UI to trigger AI suggestions and review flagged submissions inline.
 - Cleaned build artifacts again and updated README for the OpenAI moderation/suggestion path, Resend cron delivery, and the new env vars.
+- Added shared admin-auth and EXIF verification helpers, and prepared the codebase for real metadata timing checks and Supabase-session admin gating.
+- Replaced the secret-cookie admin gate with Supabase-session middleware checks and converted the admin unlock screen into a sign-in/allowlist flow.
+- Swapped both submission finalization paths onto the shared EXIF timing verifier so missing or conflicting metadata routes to manual review and explicit stale EXIF timestamps reject.
+- Rewrote the mock and Supabase finalize functions directly so they both use EXIF-driven verification rather than the previous client-timestamp-only check.
+- Fixed Supabase submission row mapping so rejected moderation/verification states are not surfaced as accepted just because an accepted_at timestamp exists.
+- Fixed stray literal newline markers left in repository import headers from an earlier patch.
+- Replaced the invalid Supabase cookie type import with a local cookie-shape type and typed the middleware cookie callback explicitly.
+- Cleaned build artifacts again and updated README to document EXIF freshness checks and the new SCAVENG_ADMIN_EMAILS-based admin access model.

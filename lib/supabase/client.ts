@@ -67,6 +67,8 @@ export function getSupabaseAdminClient(): SupabaseClient | null {
   });
 }
 
+type ResponseCookie = { name: string; value: string; options?: Record<string, unknown> };
+
 export function createRouteHandlerSupabaseClient(request: NextRequest, response: NextResponse) {
   const config = getPublicConfig();
   if (!config.url || !config.anonKey) {
@@ -78,7 +80,7 @@ export function createRouteHandlerSupabaseClient(request: NextRequest, response:
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet: Array<{ name: string; value: string; options?: Record<string, unknown> }>) {
+      setAll(cookiesToSet: ResponseCookie[]) {
         for (const cookie of cookiesToSet) {
           response.cookies.set(cookie.name, cookie.value, cookie.options);
         }
