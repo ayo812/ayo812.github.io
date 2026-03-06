@@ -5,7 +5,7 @@ import { useState, type FormEvent } from "react";
 import { formatPlacementTime } from "@/lib/time";
 import { type AdminDashboardData, type ChallengeSuggestion, type HomeState, type Submission } from "@/lib/types";
 
-const previewStates: HomeState[] = ["waiting", "live", "submitted", "results-soon", "results-out"];
+const previewStates: HomeState[] = ["waiting", "live", "submitted", "results-out"];
 
 export function AdminDashboard({ data }: { data: AdminDashboardData }) {
   const [challenge, setChallenge] = useState(data.activeHunt.challenge);
@@ -74,7 +74,7 @@ export function AdminDashboard({ data }: { data: AdminDashboardData }) {
     <div className="page shell">
       <a className="back-btn" href="/">Back</a>
       <div className="lb-title">Admin</div>
-      <div className="lb-sub">Semi-manual operations for hunt scheduling, flagged submissions, AI suggestions, and result publication.</div>
+      <div className="lb-sub">Semi-manual operations for hunt scheduling, flagged submissions, AI suggestions, and instant result publication at close.</div>
 
       <div className="admin-grid">
         <form className="admin-card" onSubmit={handleSave}>
@@ -88,7 +88,7 @@ export function AdminDashboard({ data }: { data: AdminDashboardData }) {
             {previewStates.map((stateValue) => <option key={stateValue} value={stateValue}>{stateValue}</option>)}
           </select>
           <button className="pill-btn" type="submit">Save hunt</button>
-          <p className="admin-message">{message || "Set the challenge copy and force a preview state for review."}</p>
+          <p className="admin-message">{message || "Set the challenge copy and force one of the public state variants for review."}</p>
         </form>
 
         <div className="admin-card">

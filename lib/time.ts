@@ -46,7 +46,7 @@ export function deriveHomeState(input: {
     return input.hasSubmission ? "submitted" : "live";
   }
 
-  if (nowMs < resultsMs) {
+  if (resultsMs > closeMs && nowMs < resultsMs) {
     return "results-soon";
   }
 
@@ -56,4 +56,3 @@ export function deriveHomeState(input: {
 export function isPreviewState(value: string | undefined): value is HomeState {
   return value === "waiting" || value === "live" || value === "submitted" || value === "results-soon" || value === "results-out";
 }
-

@@ -6,7 +6,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { startTransition, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 
 import { AuthCard } from "@/components/auth-card";
-import { formatFriendlyDate, formatPlacementTime } from "@/lib/time";
+import { formatOrdinal } from "@/lib/share";
+import { deriveHomeState, formatFriendlyDate, formatPlacementTime } from "@/lib/time";
 import {
   type HomePageData,
   type HomeState,
@@ -15,7 +16,7 @@ import {
   type SubmissionProgressState
 } from "@/lib/types";
 
-const HOME_STATES: HomeState[] = ["waiting", "live", "submitted", "results-soon", "results-out"];
+const PREVIEW_STATES: HomeState[] = ["waiting", "live", "submitted", "results-out"];
 
 function formatCountdown(targetIso: string, nowMs: number) {
   const diff = Math.max(0, new Date(targetIso).getTime() - nowMs);
@@ -121,16 +122,39 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
   const [nowMs, setNowMs] = useState(Date.now());
   const [homeState, setHomeState] = useState<HomeState>(initialData.homeState);
   const [submission, setSubmission] = useState<Submission | undefined>(initialData.submission);
+  const [playerResult, setPlayerResult] = useState(initialData.playerResult);
   const [uploadState, setUploadState] = useState<SubmissionProgressState>(submission ? "locked" : "idle");
   const [uploadMessage, setUploadMessage] = useState("");
   const [reminderEnabled, setReminderEnabled] = useState(initialData.reminderEnabled);
   const [reminderEmail, setReminderEmail] = useState(initialData.identity.email ?? "");
   const [reminderMessage, setReminderMessage] = useState("");
+  const [shareMessage, setShareMessage] = useState("");
 
   useEffect(() => {
     const timer = window.setInterval(() => setNowMs(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    setPlayerResult(initialData.playerResult);
+  }, [initialData.playerResult]);
+
+  const computedHomeState = deriveHomeState({
+    now: new Date(nowMs),
+    dropAt: initialData.currentHunt.dropAt,
+    closesAt: initialData.currentHunt.closesAt,
+    resultsAt: initialData.currentHunt.resultsAt,
+    hasSubmission: Boolean(submission)
+  });
+
+  useEffect(() => {
+    if (computedHomeState !== homeState) {
+      setHomeState(computedHomeState);
+      startTransition(() => {
+        router.refresh();
+      });
+    }
+  }, [computedHomeState, homeState, router]);
 
   const countdownToDrop = formatCountdown(initialData.currentHunt.dropAt, nowMs);
   const countdownToClose = formatCountdown(initialData.currentHunt.closesAt, nowMs);
@@ -158,6 +182,53 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
       setReminderMessage("Morning reminder enabled.");
     } catch (error) {
       setReminderMessage(error instanceof Error ? error.message : "Unable to save reminder preference.");
+    }
+  }
+
+  async function handleShareResult() {
+    const submissionId = playerResult?.submissionId ?? submission?.id;
+    if (!submissionId) {
+      return;
+    }
+
+    try {
+      let nextPlayerResult = playerResult;
+      if (!nextPlayerResult?.shareUrl || !nextPlayerResult.shareText) {
+        const response = await fetch("/api/results/share", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ submissionId })
+        });
+
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          throw new Error(payload.error ?? "Unable to create the shared result link.");
+        }
+
+        nextPlayerResult = await response.json();
+        setPlayerResult(nextPlayerResult);
+      }
+
+      if (!nextPlayerResult?.shareText || !nextPlayerResult.shareUrl) {
+        throw new Error("Shared result link is not ready yet.");
+      }
+
+      const canUseWebShare = typeof navigator.share === "function" && !(window as Window & { __scavengDisableWebShare?: boolean }).__scavengDisableWebShare;
+
+      if (canUseWebShare) {
+        await navigator.share({
+          text: nextPlayerResult.shareText,
+          url: nextPlayerResult.shareUrl,
+          title: "My scaveng.io result"
+        });
+        setShareMessage("Share sheet opened.");
+        return;
+      }
+
+      await navigator.clipboard.writeText(nextPlayerResult.shareText);
+      setShareMessage("Share text copied.");
+    } catch (error) {
+      setShareMessage(error instanceof Error ? error.message : "Unable to share right now.");
     }
   }
 
@@ -228,7 +299,7 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
       setSubmission(finalized);
       setHomeState("submitted");
       setUploadState("locked");
-      setUploadMessage("Submission locked. Results drop about an hour after the hunt closes.");
+      setUploadMessage("Submission locked. The results appear the second the hour ends.");
       router.refresh();
     } catch (error) {
       setUploadState("error");
@@ -261,16 +332,16 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
         {(homeState === "waiting" || homeState === "results-soon" || homeState === "results-out") && (
           <section className="pre-hero">
             <div className={`eyebrow ${homeState === "waiting" ? "waiting" : "closed"}`}>
-              {homeState === "waiting" ? "Today's hunt" : homeState === "results-soon" ? "Hunt closed" : "Results are in"}
+              {homeState === "waiting" ? "Today's hunt" : homeState === "results-soon" ? "Publishing results" : "Results are in"}
             </div>
             <h1 className="hero-title">
-              {homeState === "waiting" ? "Today's hunt drops" : homeState === "results-soon" ? "Window closed." : "Today's winners"}
+              {homeState === "waiting" ? "Today's hunt drops" : homeState === "results-soon" ? "Clock hit zero." : "Today's results"}
               <br />
               <em>
                 {homeState === "waiting"
                   ? `in ${countdownToDrop}.`
                   : homeState === "results-soon"
-                    ? "Results soon."
+                    ? `Publishing in ${countdownToResults}.`
                     : initialData.currentHunt.challenge}
               </em>
             </h1>
@@ -278,12 +349,12 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
               {homeState === "waiting"
                 ? "A new challenge drops at one global moment each day. You get exactly one hour to find it and upload your shot from your phone."
                 : homeState === "results-soon"
-                  ? "The submission window is over. Results and today's fastest five publish one hour after the hunt closes."
+                  ? "This is an internal handoff state while results publication catches up. Publicly, results should appear as the hour ends."
                   : `${initialData.currentHunt.submissionsCount} people hunted today. Here are the fastest five valid submissions.`}
             </p>
             <div className="countdown-box">
               <div className="countdown-label">
-                {homeState === "waiting" ? "Hunt drops in" : homeState === "results-soon" ? "Results drop in" : "Next hunt drops in"}
+                {homeState === "waiting" ? "Hunt drops in" : homeState === "results-soon" ? "Publishing in" : "Next hunt drops in"}
               </div>
               <div className="countdown-time">
                 {homeState === "waiting" ? countdownToDrop : homeState === "results-soon" ? countdownToResults : nextDropCountdown}
@@ -327,14 +398,14 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
             <div className="submitted-banner">
               <div className="submitted-icon">OK</div>
               <div className="submitted-title">You're in!</div>
-              <div className="submitted-time">Submitted at {new Date(submission.acceptedAt ?? Date.now()).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" })} - Results drop about one hour after the window closes</div>
+              <div className="submitted-time">Submitted at {new Date(submission.acceptedAt ?? Date.now()).toLocaleTimeString([], { hour: "numeric", minute: "2-digit", second: "2-digit" })} - Results appear the moment the window closes</div>
             </div>
             <div className="submitted-status-card">
               <div>
                 <div className="section-label">Window closes in</div>
                 <div className="submitted-countdown">{countdownToClose}</div>
               </div>
-              <div className="submitted-note">Results publish roughly one hour after close, once flagged submissions are reviewed.</div>
+              <div className="submitted-note">The instant the countdown hits zero, the live results and your placement should appear.</div>
             </div>
             <Link href="/leaderboard" className="cta-card">
               <div className="cta-card-icon">WIN</div>
@@ -382,6 +453,19 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
                     </div>
                   ))}
                 </div>
+                {playerResult && (
+                  <div className="share-card" data-testid="result-share-card">
+                    <div>
+                      <div className="section-label">Your finish</div>
+                      <div className="share-rank">{formatOrdinal(playerResult.overallRank)} place</div>
+                      <div className="share-meta">{playerResult.totalRanked} ranked submissions</div>
+                    </div>
+                    <div className="share-actions">
+                      <button className="pill-btn" type="button" onClick={handleShareResult} data-testid="share-result-button">Share result</button>
+                      <div className="share-note">{shareMessage || (playerResult.shareUrl ? "Official result page ready. Sharing uses the verified scaveng.io link." : "Creates an official scaveng.io result page, then shares your rank and link.")}</div>
+                    </div>
+                  </div>
+                )}
                 <Link href="/leaderboard" className="cta-card cta-card--tight">
                   <div className="cta-card-icon">WIN</div>
                   <div>
@@ -399,10 +483,10 @@ export function HomePageClient({ initialData }: { initialData: HomePageData }) {
           <section className="preview-panel">
             <div>
               <div className="section-label">Preview states</div>
-              <p className="preview-copy">Development-only state switcher for the five daily-cycle variants.</p>
+              <p className="preview-copy">Development-only state switcher for the public daily-cycle variants.</p>
             </div>
             <div className="preview-buttons">
-              {HOME_STATES.map((stateValue) => (
+              {PREVIEW_STATES.map((stateValue) => (
                 <button
                   key={stateValue}
                   type="button"

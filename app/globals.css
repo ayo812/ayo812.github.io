@@ -752,3 +752,70 @@ a {
   flex-direction: column;
   align-items: stretch;
 }
+.share-card {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1.1rem;
+  border-radius: 1rem;
+  border: 2px solid var(--border);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 232, 227, 0.62));
+}
+
+.share-rank {
+  margin-top: 0.3rem;
+  font-family: var(--font-fraunces), serif;
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.share-meta,
+.share-note {
+  color: var(--mid);
+}
+
+.share-actions {
+  display: grid;
+  gap: 0.6rem;
+}
+.result-shell {
+  padding-top: 2rem;
+}
+
+.result-card {
+  background: rgba(255, 255, 255, 0.96);
+  border: 2px solid var(--border);
+  border-radius: 1.4rem;
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+}
+
+.result-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.result-rank {
+  margin-top: 0.35rem;
+  font-family: var(--font-fraunces), serif;
+  font-size: clamp(2.3rem, 10vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.result-photo {
+  width: 100%;
+  border-radius: 1rem;
+  border: 2px solid var(--border);
+  background: var(--white);
+  object-fit: cover;
+}
+
+@media (min-width: 720px) {
+  .result-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+}

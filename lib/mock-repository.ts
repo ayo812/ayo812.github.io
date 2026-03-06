@@ -1,3 +1,4 @@
+import { buildPlayerResultSummary } from "@/lib/share";
 import { deriveGuestAlias } from "@/lib/identity";
 import { verifySubmissionTiming } from "@/lib/submission-verification";
 import { deriveHomeState } from "@/lib/time";
@@ -11,34 +12,37 @@ import {
   type LeaderboardEntry,
   type LeaderboardRange,
   type PlayerIdentity,
+  type PlayerResultSummary,
+  type PublicResultPageData,
   type ResultEntry,
   type Submission,
   type SubmissionIntent
 } from "@/lib/types";
 
+const DEFAULT_IMAGE_DATA_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a7x8AAAAASUVORK5CYII=";
 const leaderboardBase: LeaderboardEntry[] = [
-  { name: "swift_snapper", wins: 47, topFiveFinishes: 82, emoji: "?" },
-  { name: "photo_finn", wins: 38, topFiveFinishes: 69, emoji: "??" },
-  { name: "dailyhunter", wins: 31, topFiveFinishes: 58, emoji: "??" },
-  { name: "lensmaster99", wins: 28, topFiveFinishes: 47, emoji: "??" },
-  { name: "morningscout", wins: 24, topFiveFinishes: 39, emoji: "??" },
-  { name: "quickclick", wins: 19, topFiveFinishes: 31, emoji: "??" },
-  { name: "wandereye", wins: 15, topFiveFinishes: 29, emoji: "??" },
-  { name: "naturenerd42", wins: 12, topFiveFinishes: 22, emoji: "??" }
+  { name: "swift_snapper", wins: 47, topFiveFinishes: 82, emoji: "RANK" },
+  { name: "photo_finn", wins: 38, topFiveFinishes: 69, emoji: "RANK" },
+  { name: "dailyhunter", wins: 31, topFiveFinishes: 58, emoji: "RANK" },
+  { name: "lensmaster99", wins: 28, topFiveFinishes: 47, emoji: "RANK" },
+  { name: "morningscout", wins: 24, topFiveFinishes: 39, emoji: "RANK" },
+  { name: "quickclick", wins: 19, topFiveFinishes: 31, emoji: "RANK" },
+  { name: "wandereye", wins: 15, topFiveFinishes: 29, emoji: "RANK" },
+  { name: "naturenerd42", wins: 12, topFiveFinishes: 22, emoji: "RANK" }
 ];
 
 const publishedResultsSeed: ResultEntry[] = [
-  { submissionId: "r1", rank: 1, displayName: "swift_snapper", accountEligible: true, timeToSubmitSeconds: 252, acceptedAt: new Date().toISOString(), emoji: "??" },
-  { submissionId: "r2", rank: 2, displayName: "photo_finn", accountEligible: true, timeToSubmitSeconds: 423, acceptedAt: new Date().toISOString(), emoji: "??" },
-  { submissionId: "r3", rank: 3, displayName: "dailyhunter", accountEligible: true, timeToSubmitSeconds: 584, acceptedAt: new Date().toISOString(), emoji: "??" },
-  { submissionId: "r4", rank: 4, displayName: "guest_fox_12", accountEligible: false, timeToSubmitSeconds: 751, acceptedAt: new Date().toISOString(), emoji: "??", guestAlias: "guest_fox_12" },
-  { submissionId: "r5", rank: 5, displayName: "quickclick", accountEligible: true, timeToSubmitSeconds: 1135, acceptedAt: new Date().toISOString(), emoji: "??" }
+  { submissionId: "r1", rank: 1, displayName: "swift_snapper", accountEligible: true, timeToSubmitSeconds: 252, acceptedAt: new Date().toISOString(), emoji: "DOG" },
+  { submissionId: "r2", rank: 2, displayName: "photo_finn", accountEligible: true, timeToSubmitSeconds: 423, acceptedAt: new Date().toISOString(), emoji: "TREE" },
+  { submissionId: "r3", rank: 3, displayName: "dailyhunter", accountEligible: true, timeToSubmitSeconds: 584, acceptedAt: new Date().toISOString(), emoji: "LEAF" },
+  { submissionId: "r4", rank: 4, displayName: "guest_fox_12", accountEligible: false, timeToSubmitSeconds: 751, acceptedAt: new Date().toISOString(), emoji: "PATH", guestAlias: "guest_fox_12" },
+  { submissionId: "r5", rank: 5, displayName: "quickclick", accountEligible: true, timeToSubmitSeconds: 1135, acceptedAt: new Date().toISOString(), emoji: "LENS" }
 ];
 
 const previousResultsSeed: ResultEntry[] = [
-  { submissionId: "y1", rank: 1, displayName: "swift_snapper", accountEligible: true, timeToSubmitSeconds: 312, acceptedAt: new Date().toISOString(), emoji: "??" },
-  { submissionId: "y2", rank: 2, displayName: "photo_finn", accountEligible: true, timeToSubmitSeconds: 463, acceptedAt: new Date().toISOString(), emoji: "??" },
-  { submissionId: "y3", rank: 3, displayName: "dailyhunter", accountEligible: true, timeToSubmitSeconds: 621, acceptedAt: new Date().toISOString(), emoji: "??" }
+  { submissionId: "y1", rank: 1, displayName: "swift_snapper", accountEligible: true, timeToSubmitSeconds: 312, acceptedAt: new Date().toISOString(), emoji: "DOG" },
+  { submissionId: "y2", rank: 2, displayName: "photo_finn", accountEligible: true, timeToSubmitSeconds: 463, acceptedAt: new Date().toISOString(), emoji: "TREE" },
+  { submissionId: "y3", rank: 3, displayName: "dailyhunter", accountEligible: true, timeToSubmitSeconds: 621, acceptedAt: new Date().toISOString(), emoji: "LEAF" }
 ];
 
 const challengeSuggestions: ChallengeSuggestion[] = [
@@ -61,7 +65,9 @@ const state = {
   publishedResults: structuredClone(publishedResultsSeed),
   previousResults: structuredClone(previousResultsSeed),
   submissions: new Map<string, Submission>(),
-  reminders: new Map<string, boolean>()
+  reminders: new Map<string, boolean>(),
+  sharesBySubmission: new Map<string, string>(),
+  sharesById: new Map<string, string>()
 };
 
 function subtractScale(entries: LeaderboardEntry[], winsDelta: number, topFiveDelta: number) {
@@ -88,13 +94,15 @@ function buildHunt(previewState: HomeState): Hunt {
   const now = Date.now();
 
   if (previewState === "waiting") {
+    const dropAt = new Date(now + 1000 * 60 * 60 * 3.4).toISOString();
+    const closesAt = new Date(now + 1000 * 60 * 60 * 4.4).toISOString();
     return {
       id: "hunt-today",
       challenge: state.activeChallenge,
       challengeHint: state.activeHint,
-      dropAt: new Date(now + 1000 * 60 * 60 * 3.4).toISOString(),
-      closesAt: new Date(now + 1000 * 60 * 60 * 4.4).toISOString(),
-      resultsAt: new Date(now + 1000 * 60 * 60 * 5.4).toISOString(),
+      dropAt,
+      closesAt,
+      resultsAt: closesAt,
       status: "scheduled",
       approvedSource: "manual",
       submissionsCount: 0
@@ -102,13 +110,15 @@ function buildHunt(previewState: HomeState): Hunt {
   }
 
   if (previewState === "live" || previewState === "submitted") {
+    const dropAt = new Date(now - 1000 * 60 * 22).toISOString();
+    const closesAt = new Date(now + 1000 * 60 * 38).toISOString();
     return {
       id: "hunt-today",
       challenge: state.activeChallenge,
       challengeHint: state.activeHint,
-      dropAt: new Date(now - 1000 * 60 * 22).toISOString(),
-      closesAt: new Date(now + 1000 * 60 * 38).toISOString(),
-      resultsAt: new Date(now + 1000 * 60 * 98).toISOString(),
+      dropAt,
+      closesAt,
+      resultsAt: closesAt,
       status: "live",
       approvedSource: "manual",
       submissionsCount: 143 + state.submissions.size
@@ -122,20 +132,22 @@ function buildHunt(previewState: HomeState): Hunt {
       challengeHint: state.activeHint,
       dropAt: new Date(now - 1000 * 60 * 90).toISOString(),
       closesAt: new Date(now - 1000 * 60 * 30).toISOString(),
-      resultsAt: new Date(now + 1000 * 60 * 30).toISOString(),
+      resultsAt: new Date(now + 1000 * 15).toISOString(),
       status: "results_pending",
       approvedSource: "manual",
       submissionsCount: 268 + state.submissions.size
     };
   }
 
+  const dropAt = new Date(now - 1000 * 60 * 180).toISOString();
+  const closesAt = new Date(now - 1000 * 60 * 120).toISOString();
   return {
     id: "hunt-today",
     challenge: state.activeChallenge,
     challengeHint: state.activeHint,
-    dropAt: new Date(now - 1000 * 60 * 180).toISOString(),
-    closesAt: new Date(now - 1000 * 60 * 120).toISOString(),
-    resultsAt: new Date(now - 1000 * 60 * 60).toISOString(),
+    dropAt,
+    closesAt,
+    resultsAt: closesAt,
     status: "results_published",
     approvedSource: "manual",
     submissionsCount: 312 + state.submissions.size
@@ -144,6 +156,88 @@ function buildHunt(previewState: HomeState): Hunt {
 
 function getSubmissionFor(identityId: string, huntId: string) {
   return Array.from(state.submissions.values()).find((submission) => submission.identityId === identityId && submission.huntId === huntId);
+}
+
+function buildSyntheticSubmission(identity: PlayerIdentity, hunt: Hunt): Submission {
+  return {
+    id: "synthetic-submission",
+    huntId: hunt.id,
+    identityId: identity.id,
+    guestAlias: identity.guestAlias,
+    fileName: "camera-roll.jpg",
+    mimeType: "image/jpeg",
+    fileSize: 720000,
+    width: 1440,
+    height: 1920,
+    imageDataUrl: DEFAULT_IMAGE_DATA_URL,
+    capturedAt: new Date(Date.now() - 1000 * 60 * 3).toISOString(),
+    acceptedAt: new Date(Date.now() - 1000 * 60 * 2).toISOString(),
+    moderationStatus: "approved",
+    verificationStatus: "verified",
+    moderationDetails: { provider: "fallback", reason: "Mock accepted submission." },
+    verificationDetails: { source: "exif", exifCapturedAt: new Date(Date.now() - 1000 * 60 * 3).toISOString(), withinWindow: true },
+    uploadState: "accepted"
+  };
+}
+
+function getRankedSubmissions(huntId: string, includeSynthetic?: Submission) {
+  const ranked = Array.from(state.submissions.values())
+    .filter((entry) => entry.huntId === huntId)
+    .filter((entry) => entry.acceptedAt && entry.moderationStatus !== "blocked" && entry.verificationStatus !== "rejected")
+    .sort((left, right) => new Date(left.acceptedAt ?? 0).getTime() - new Date(right.acceptedAt ?? 0).getTime());
+
+  if (includeSynthetic && !ranked.some((entry) => entry.id === includeSynthetic.id)) {
+    ranked.push(includeSynthetic);
+    ranked.sort((left, right) => new Date(left.acceptedAt ?? 0).getTime() - new Date(right.acceptedAt ?? 0).getTime());
+  }
+
+  return ranked;
+}
+
+function buildPlayerResult(hunt: Hunt, submission: Submission | undefined, publishedResults: ResultEntry[]): PlayerResultSummary | undefined {
+  if (!submission?.acceptedAt || submission.moderationStatus === "blocked" || submission.verificationStatus === "rejected") {
+    return undefined;
+  }
+
+  const ranked = getRankedSubmissions(hunt.id, submission);
+  const overallRank = ranked.findIndex((entry) => entry.id === submission.id) + 1;
+  if (overallRank <= 0) {
+    return undefined;
+  }
+
+  return buildPlayerResultSummary({
+    submissionId: submission.id,
+    overallRank,
+    totalRanked: ranked.length,
+    isTopFive: Boolean(publishedResults.some((entry) => entry.submissionId === submission.id)),
+    hunt,
+    shareId: state.sharesBySubmission.get(submission.id)
+  });
+}
+
+function ensureResultsReady(hunt: Hunt) {
+  const stateNow = deriveHomeState({
+    now: new Date(),
+    dropAt: hunt.dropAt,
+    closesAt: hunt.closesAt,
+    resultsAt: hunt.resultsAt,
+    hasSubmission: false
+  });
+  if (stateNow !== "results-out") {
+    throw new Error("Results are not published yet.");
+  }
+}
+
+function parseDataUrl(dataUrl: string) {
+  const match = /^data:(.+);base64,(.+)$/.exec(dataUrl);
+  if (!match) {
+    return null;
+  }
+
+  return {
+    mimeType: match[1],
+    buffer: Buffer.from(match[2], "base64")
+  };
 }
 
 export type CreateIntentInput = {
@@ -187,23 +281,13 @@ export async function getHomePageData(identity: PlayerIdentity, previewState?: H
         hasSubmission: Boolean(existingSubmission)
       });
 
-  const syntheticSubmission = homeState === "submitted" && !existingSubmission
-    ? {
-        id: "synthetic-submission",
-        huntId: hunt.id,
-        identityId: identity.id,
-        guestAlias: identity.guestAlias,
-        fileName: "camera-roll.jpg",
-        mimeType: "image/jpeg",
-        fileSize: 720000,
-        width: 1440,
-        height: 1920,
-        capturedAt: new Date(Date.now() - 1000 * 60 * 3).toISOString(),
-        acceptedAt: new Date(Date.now() - 1000 * 60 * 2).toISOString(),
-        moderationStatus: "approved" as const,
-        verificationStatus: "verified" as const,
-        uploadState: "accepted" as const
-      }
+  const syntheticSubmission = !existingSubmission && (homeState === "submitted" || homeState === "results-out")
+    ? buildSyntheticSubmission(identity, hunt)
+    : undefined;
+  const activeSubmission = existingSubmission ?? syntheticSubmission;
+  const publishedResults = homeState === "results-out" ? state.publishedResults : [];
+  const playerResult = homeState === "results-out"
+    ? buildPlayerResult(hunt, activeSubmission, publishedResults)
     : undefined;
 
   return {
@@ -211,9 +295,10 @@ export async function getHomePageData(identity: PlayerIdentity, previewState?: H
     homeState,
     currentHunt: hunt,
     previousResults: state.previousResults,
-    publishedResults: state.publishedResults,
+    publishedResults,
     leaderboardPreview: getLeaderboard("all-time").slice(0, 5),
-    submission: existingSubmission ?? syntheticSubmission,
+    submission: activeSubmission,
+    playerResult,
     history: identity.isGuest ? [] : historySeed,
     reminderEnabled: state.reminders.get(identity.id) ?? false,
     previewStateEnabled: process.env.NODE_ENV !== "production"
@@ -235,7 +320,7 @@ export async function getAdminDashboard(): Promise<AdminDashboardData> {
     flaggedSubmissions: Array.from(state.submissions.values()).filter(
       (submission) => submission.moderationStatus !== "approved" || submission.verificationStatus !== "verified"
     ),
-    publishedResults: state.publishedResults
+    publishedResults: state.previewState === "results-out" ? state.publishedResults : []
   };
 }
 
@@ -302,16 +387,110 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput) {
     fileSize: input.fileSize,
     width: input.width,
     height: input.height,
+    imageDataUrl: input.imageDataUrl,
     capturedAt: verification.chosenCapturedAt ?? input.capturedAt,
     acceptedAt: new Date().toISOString(),
     moderationStatus,
     verificationStatus: verification.verificationStatus,
+    verificationDetails: verification.details,
+    moderationDetails: {
+      provider: "fallback",
+      reason: moderationStatus === "approved" ? "Mock fallback accepted image mime type." : "Mock fallback blocked non-image upload."
+    },
     reviewNotes: verification.reviewNotes,
     uploadState: moderationStatus === "blocked" || verification.verificationStatus === "rejected" ? "rejected" : "accepted"
   };
 
   state.submissions.set(input.submissionId, accepted);
   return accepted;
+}
+
+export async function createResultShare(input: { identityId: string; submissionId: string }) {
+  const submission = state.submissions.get(input.submissionId);
+  if (!submission || submission.identityId !== input.identityId) {
+    throw new Error("Submission not found.");
+  }
+
+  const hunt = buildHunt("results-out");
+  ensureResultsReady(hunt);
+
+  let shareId = state.sharesBySubmission.get(submission.id);
+  if (!shareId) {
+    shareId = crypto.randomUUID().replace(/-/g, "");
+    state.sharesBySubmission.set(submission.id, shareId);
+    state.sharesById.set(shareId, submission.id);
+  }
+
+  const summary = buildPlayerResult(hunt, submission, state.publishedResults);
+  if (!summary) {
+    throw new Error("Unable to build share result.");
+  }
+
+  return {
+    ...summary,
+    shareId,
+    shareUrl: buildPlayerResultSummary({
+      submissionId: summary.submissionId,
+      overallRank: summary.overallRank,
+      totalRanked: summary.totalRanked,
+      isTopFive: summary.isTopFive,
+      hunt,
+      shareId
+    }).shareUrl,
+    shareText: buildPlayerResultSummary({
+      submissionId: summary.submissionId,
+      overallRank: summary.overallRank,
+      totalRanked: summary.totalRanked,
+      isTopFive: summary.isTopFive,
+      hunt,
+      shareId
+    }).shareText
+  } satisfies PlayerResultSummary;
+}
+
+export async function getPublicResultPageData(shareId: string): Promise<PublicResultPageData | null> {
+  const submissionId = state.sharesById.get(shareId);
+  if (!submissionId) {
+    return null;
+  }
+
+  const submission = state.submissions.get(submissionId);
+  if (!submission) {
+    return null;
+  }
+
+  const hunt = buildHunt("results-out");
+  const summary = buildPlayerResult(hunt, submission, state.publishedResults);
+  if (!summary) {
+    return null;
+  }
+
+  return {
+    shareId,
+    submissionId: submission.id,
+    challenge: hunt.challenge,
+    displayName: submission.guestAlias,
+    overallRank: summary.overallRank,
+    totalRanked: summary.totalRanked,
+    isTopFive: summary.isTopFive,
+    acceptedAt: submission.acceptedAt ?? new Date().toISOString(),
+    imageUrl: `/api/result-assets/${shareId}`
+  };
+}
+
+export async function getSharedResultAsset(shareId: string) {
+  const submissionId = state.sharesById.get(shareId);
+  if (!submissionId) {
+    return null;
+  }
+
+  const submission = state.submissions.get(submissionId);
+  const parsed = parseDataUrl(submission?.imageDataUrl ?? DEFAULT_IMAGE_DATA_URL);
+  if (!parsed) {
+    return null;
+  }
+
+  return parsed;
 }
 
 export async function setReminder(identityId: string, enabled: boolean) {
@@ -328,9 +507,33 @@ export async function updateHunt(input: { challenge: string; challengeHint: stri
   return buildHunt(state.previewState);
 }
 
+export async function createChallengeSuggestions(count = 3) {
+  const suggestions = [
+    { id: `mock-${Date.now()}-1`, title: "Find a handwritten grocery list", rationale: "Common household object with low safety risk.", sourceModel: "fallback", approved: false },
+    { id: `mock-${Date.now()}-2`, title: "Find a striped umbrella", rationale: "Visually distinct and easy to verify.", sourceModel: "fallback", approved: false },
+    { id: `mock-${Date.now()}-3`, title: "Find a yellow mug", rationale: "Simple object challenge with broad availability.", sourceModel: "fallback", approved: false }
+  ].slice(0, count);
+
+  state.suggestions = [...suggestions, ...state.suggestions].slice(0, 10);
+  return state.suggestions;
+}
+
+export async function listReminderRecipients() {
+  return [] as Array<{ email: string }>;
+}
+
 export async function publishResults() {
   state.previewState = "results-out";
   return state.publishedResults;
+}
+
+export async function publishDueResults() {
+  if (state.previewState === "results-soon") {
+    state.previewState = "results-out";
+    return [{ huntId: "hunt-today", publishedCount: state.publishedResults.length }];
+  }
+
+  return [] as Array<{ huntId: string; publishedCount: number }>;
 }
 
 export async function reviewSubmission(input: ReviewSubmissionInput) {
@@ -362,20 +565,4 @@ export async function getSubmissionSummary() {
     ...submission,
     guestAlias: submission.guestAlias || deriveGuestAlias(submission.identityId)
   }));
-}
-
-
-export async function createChallengeSuggestions(count = 3) {
-  const suggestions = [
-    { id: `mock-${Date.now()}-1`, title: "Find a handwritten grocery list", rationale: "Common household object with low safety risk.", sourceModel: "fallback", approved: false },
-    { id: `mock-${Date.now()}-2`, title: "Find a striped umbrella", rationale: "Visually distinct and easy to verify.", sourceModel: "fallback", approved: false },
-    { id: `mock-${Date.now()}-3`, title: "Find a yellow mug", rationale: "Simple object challenge with broad availability.", sourceModel: "fallback", approved: false }
-  ].slice(0, count);
-
-  state.suggestions = [...suggestions, ...state.suggestions].slice(0, 10);
-  return state.suggestions;
-}
-
-export async function listReminderRecipients() {
-  return [] as Array<{ email: string }>;
 }

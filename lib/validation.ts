@@ -18,6 +18,10 @@ export const finalizeSubmissionSchema = z.object({
   imageDataUrl: z.string().min(10)
 });
 
+export const createShareSchema = z.object({
+  submissionId: z.string()
+});
+
 export const reminderSchema = z.object({
   enabled: z.boolean(),
   email: z.string().email().optional()

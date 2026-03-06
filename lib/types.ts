@@ -34,6 +34,20 @@ export type SubmissionProgressState =
   | "locked"
   | "error";
 
+export type VerificationDetails = {
+  source: "exif" | "client" | "missing";
+  exifCapturedAt?: string;
+  clientCapturedAt?: string;
+  mismatchMs?: number;
+  withinWindow?: boolean;
+};
+
+export type ModerationDetails = {
+  provider: "openai" | "fallback";
+  model?: string;
+  reason: string;
+};
+
 export type PlayerIdentity = {
   id: string;
   guestAlias: string;
@@ -87,10 +101,13 @@ export type Submission = {
   width: number;
   height: number;
   storagePath?: string;
+  imageDataUrl?: string;
   capturedAt?: string;
   acceptedAt?: string;
   moderationStatus: ModerationStatus;
   verificationStatus: SubmissionVerificationStatus;
+  verificationDetails?: VerificationDetails;
+  moderationDetails?: ModerationDetails;
   reviewNotes?: string;
   uploadState: "pending" | "accepted" | "rejected";
 };
@@ -117,6 +134,28 @@ export type ChallengeSuggestion = {
   approved: boolean;
 };
 
+export type PlayerResultSummary = {
+  submissionId: string;
+  overallRank: number;
+  totalRanked: number;
+  isTopFive: boolean;
+  shareId?: string;
+  shareText?: string;
+  shareUrl?: string;
+};
+
+export type PublicResultPageData = {
+  shareId: string;
+  submissionId: string;
+  challenge: string;
+  displayName: string;
+  overallRank: number;
+  totalRanked: number;
+  isTopFive: boolean;
+  acceptedAt: string;
+  imageUrl: string;
+};
+
 export type HomePageData = {
   identity: PlayerIdentity;
   homeState: HomeState;
@@ -125,6 +164,7 @@ export type HomePageData = {
   publishedResults: ResultEntry[];
   leaderboardPreview: LeaderboardEntry[];
   submission?: Submission;
+  playerResult?: PlayerResultSummary;
   history: HistoryEntry[];
   reminderEnabled: boolean;
   previewStateEnabled: boolean;

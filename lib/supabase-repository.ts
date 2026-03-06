@@ -1,4 +1,5 @@
 import { moderateSubmissionImage, generateChallengeSuggestions as generateSuggestionsWithOpenAI } from "@/lib/openai";
+import { buildPlayerResultSummary } from "@/lib/share";
 import { deriveHomeState, formatFriendlyDate } from "@/lib/time";
 import { verifySubmissionTiming } from "@/lib/submission-verification";
 import { getSupabaseAdminClient } from "@/lib/supabase/client";
@@ -10,6 +11,8 @@ import {
   type Hunt,
   type LeaderboardEntry,
   type LeaderboardRange,
+  type PlayerResultSummary,
+  type PublicResultPageData,
   type ResultEntry,
   type Submission
 } from "@/lib/types";
@@ -57,7 +60,7 @@ function fallbackHunt(): Hunt {
     challengeHint: "Any real dog counts. Fastest valid submission wins.",
     dropAt: new Date(now + 1000 * 60 * 60 * 3).toISOString(),
     closesAt: new Date(now + 1000 * 60 * 60 * 4).toISOString(),
-    resultsAt: new Date(now + 1000 * 60 * 60 * 5).toISOString(),
+    resultsAt: new Date(now + 1000 * 60 * 60 * 4).toISOString(),
     status: "scheduled",
     approvedSource: "manual",
     submissionsCount: 0
@@ -102,6 +105,29 @@ async function getHuntById(huntId: string) {
   if (error) {
     throw error;
   }
+  return (data ?? null) as Row | null;
+}
+async function getExistingShareId(submissionId: string) {
+  const admin = requireAdmin();
+  const { data, error } = await admin.from("shared_results").select("share_id").eq("submission_id", submissionId).maybeSingle();
+  if (error) {
+    throw error;
+  }
+  return data?.share_id ? String(data.share_id) : undefined;
+}
+
+async function getSharedResultRow(shareId: string) {
+  const admin = requireAdmin();
+  const { data, error } = await admin
+    .from("shared_results")
+    .select("share_id,submissions!inner(id,hunt_id,identity_key,guest_alias,accepted_at,storage_path,mime_type,profiles(username),hunts!inner(id,challenge,challenge_hint,drop_at,closes_at,results_at,status,approved_source))")
+    .eq("share_id", shareId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
   return (data ?? null) as Row | null;
 }
 
@@ -163,6 +189,42 @@ async function getPreviousPublishedResults(currentHuntId: string) {
   return (await getPublishedResultsForHunt(String(data.id), String(data.drop_at))).slice(0, 3);
 }
 
+async function getPlayerResultSummary(hunt: Hunt, submission: Submission | undefined, publishedResults: ResultEntry[]) : Promise<PlayerResultSummary | undefined> {
+  if (!submission?.acceptedAt || submission.moderationStatus === "blocked" || submission.verificationStatus === "rejected") {
+    return undefined;
+  }
+
+  const publishedEntry = publishedResults.find((entry) => entry.submissionId === submission.id);
+  const admin = requireAdmin();
+  const { data, error } = await admin
+    .from("submissions")
+    .select("id")
+    .eq("hunt_id", hunt.id)
+    .not("accepted_at", "is", null)
+    .neq("moderation_status", "blocked")
+    .neq("verification_status", "rejected")
+    .order("accepted_at", { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  const rankedIds = (data ?? []).map((row) => String((row as Row).id));
+  const overallRank = publishedEntry?.rank ?? (rankedIds.findIndex((id) => id === submission.id) + 1);
+  if (overallRank <= 0) {
+    return undefined;
+  }
+
+  return buildPlayerResultSummary({
+    submissionId: submission.id,
+    overallRank,
+    totalRanked: rankedIds.length || overallRank,
+    isTopFive: Boolean(publishedEntry),
+    hunt,
+    shareId: await getExistingShareId(submission.id)
+  });
+}
+
 function submissionFromRow(row: Row): Submission {
   return {
     id: String(row.id),
@@ -179,6 +241,8 @@ function submissionFromRow(row: Row): Submission {
     acceptedAt: row.accepted_at ? String(row.accepted_at) : undefined,
     moderationStatus: (row.moderation_status as Submission["moderationStatus"]) ?? "pending",
     verificationStatus: (row.verification_status as Submission["verificationStatus"]) ?? "pending",
+    verificationDetails: row.verification_details ? (row.verification_details as Submission["verificationDetails"]) : undefined,
+    moderationDetails: row.moderation_details ? (row.moderation_details as Submission["moderationDetails"]) : undefined,
     reviewNotes: row.review_notes ? String(row.review_notes) : undefined,
     uploadState: row.verification_status === "rejected" || row.moderation_status === "blocked" ? "rejected" : row.accepted_at ? "accepted" : "pending"
   };
@@ -220,8 +284,15 @@ export async function getCurrentHunt() {
   if (!row) {
     return fallbackHunt();
   }
+
   const submissionsCount = await countSubmissions(String(row.id));
-  return asHunt(row, submissionsCount);
+  const hunt = asHunt(row, submissionsCount);
+  if (hunt.status !== "results_published" && Date.now() >= new Date(hunt.resultsAt).getTime()) {
+    await publishResultsForHunt(hunt);
+    return { ...hunt, status: "results_published" as const };
+  }
+
+  return hunt;
 }
 
 export async function getHomePageData(identity: { id: string; guestAlias: string; isGuest: boolean; email?: string; username?: string; displayName?: string; }) : Promise<HomePageData> {
@@ -242,10 +313,16 @@ export async function getHomePageData(identity: { id: string; guestAlias: string
   }
 
   const submissionsCount = await countSubmissions(String(row.id));
-  const hunt = asHunt(row, submissionsCount);
+  let hunt = asHunt(row, submissionsCount);
   const existingRow = await getExistingSubmission(identity.id, hunt.id);
   const submission = existingRow ? submissionFromRow(existingRow) : undefined;
-  const publishedResults = hunt.status === "results_published" ? await getPublishedResultsForHunt(hunt.id, hunt.dropAt) : [];
+  let publishedResults = hunt.status === "results_published" ? await getPublishedResultsForHunt(hunt.id, hunt.dropAt) : [];
+
+  if (hunt.status !== "results_published" && Date.now() >= new Date(hunt.resultsAt).getTime()) {
+    publishedResults = await publishResultsForHunt(hunt);
+    hunt = { ...hunt, status: "results_published" };
+  }
+
   const previousResults = await getPreviousPublishedResults(hunt.id);
   const leaderboardPreview = (await getLeaderboardData("all-time")).slice(0, 5);
   const history = identity.isGuest ? [] : await getHistory(identity);
@@ -256,6 +333,9 @@ export async function getHomePageData(identity: { id: string; guestAlias: string
     resultsAt: hunt.resultsAt,
     hasSubmission: Boolean(submission)
   });
+  const playerResult = homeState === "results-out"
+    ? await getPlayerResultSummary(hunt, submission, publishedResults)
+    : undefined;
 
   let reminderEnabled = false;
   if (!identity.isGuest) {
@@ -272,6 +352,7 @@ export async function getHomePageData(identity: { id: string; guestAlias: string
     publishedResults,
     leaderboardPreview,
     submission,
+    playerResult,
     history,
     reminderEnabled,
     previewStateEnabled: process.env.NODE_ENV !== "production"
@@ -478,6 +559,13 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput & { imag
 
   let moderationStatus: Submission["moderationStatus"] = parsed.mimeType.startsWith("image/") ? "approved" : "blocked";
   let reviewNotes = verification.reviewNotes;
+  let moderationDetails: Submission["moderationDetails"] = {
+    provider: "fallback",
+    reason: parsed.mimeType.startsWith("image/")
+      ? "Basic mime-type fallback accepted the upload before AI review."
+      : "Basic mime-type fallback blocked a non-image upload."
+  };
+
   try {
     const moderation = await moderateSubmissionImage({
       challenge: String(huntRow.challenge ?? "Daily scavenger hunt"),
@@ -485,8 +573,17 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput & { imag
     });
     moderationStatus = moderation.moderationStatus;
     reviewNotes = `${verification.reviewNotes} ${moderation.reviewNotes}`.trim();
+    moderationDetails = {
+      provider: process.env.OPENAI_API_KEY ? "openai" : "fallback",
+      model: process.env.OPENAI_API_KEY ? (process.env.OPENAI_MODERATION_MODEL ?? "gpt-4.1-mini") : undefined,
+      reason: moderation.reviewNotes
+    };
   } catch (error) {
-    reviewNotes = `${verification.reviewNotes} ${error instanceof Error ? `OpenAI moderation unavailable: ${error.message}` : "OpenAI moderation unavailable."}`.trim();
+    moderationDetails = {
+      provider: "fallback",
+      reason: error instanceof Error ? `OpenAI moderation unavailable: ${error.message}` : "OpenAI moderation unavailable."
+    };
+    reviewNotes = `${verification.reviewNotes} ${moderationDetails.reason}`.trim();
   }
 
   const { data, error } = await admin.from("submissions").update({
@@ -499,7 +596,9 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput & { imag
     captured_at: verification.chosenCapturedAt ?? input.capturedAt ?? null,
     accepted_at: new Date().toISOString(),
     moderation_status: moderationStatus,
+    moderation_details: moderationDetails,
     verification_status: verification.verificationStatus,
+    verification_details: verification.details,
     review_notes: reviewNotes
   }).eq("id", input.submissionId).select("*").single();
 
@@ -510,6 +609,122 @@ export async function finalizeSubmission(input: FinalizeSubmissionInput & { imag
   return submissionFromRow(data as Row);
 }
 
+export async function createResultShare(input: { identityId: string; submissionId: string }) {
+  const admin = requireAdmin();
+  const { data: submissionRow, error: submissionError } = await admin
+    .from("submissions")
+    .select("*")
+    .eq("id", input.submissionId)
+    .eq("identity_key", input.identityId)
+    .maybeSingle();
+
+  if (submissionError) {
+    throw submissionError;
+  }
+
+  if (!submissionRow) {
+    throw new Error("Submission not found.");
+  }
+
+  const submission = submissionFromRow(submissionRow as Row);
+  const huntRow = await getHuntById(submission.huntId);
+  if (!huntRow) {
+    throw new Error("Hunt not found.");
+  }
+
+  let hunt = asHunt(huntRow, await countSubmissions(submission.huntId));
+  if (hunt.status !== "results_published" && Date.now() >= new Date(hunt.resultsAt).getTime()) {
+    await publishResultsForHunt(hunt);
+    hunt = { ...hunt, status: "results_published" };
+  }
+
+  if (hunt.status !== "results_published") {
+    throw new Error("Results are not published yet.");
+  }
+
+  let shareId = await getExistingShareId(submission.id);
+  if (!shareId) {
+    shareId = crypto.randomUUID().replace(/-/g, "");
+    const { error } = await admin.from("shared_results").insert({
+      share_id: shareId,
+      submission_id: submission.id
+    });
+    if (error && !String(error.message ?? "").includes("duplicate")) {
+      throw error;
+    }
+    shareId = await getExistingShareId(submission.id) ?? shareId;
+  }
+
+  const publishedResults = await getPublishedResultsForHunt(hunt.id, hunt.dropAt);
+  const summary = await getPlayerResultSummary(hunt, submission, publishedResults);
+  if (!summary) {
+    throw new Error("Unable to build share result.");
+  }
+
+  return {
+    ...summary,
+    shareId
+  } satisfies PlayerResultSummary;
+}
+
+export async function getPublicResultPageData(shareId: string): Promise<PublicResultPageData | null> {
+  const shareRow = await getSharedResultRow(shareId);
+  if (!shareRow) {
+    return null;
+  }
+
+  const submissionRow = arrayValue((shareRow.submissions ?? null) as Row | Row[] | null);
+  const huntRow = arrayValue((submissionRow?.hunts ?? null) as Row | Row[] | null);
+  const profileRow = arrayValue((submissionRow?.profiles ?? null) as Row | Row[] | null);
+  if (!submissionRow || !huntRow) {
+    return null;
+  }
+
+  const hunt = asHunt(huntRow, await countSubmissions(String(huntRow.id)));
+  const submission = submissionFromRow(submissionRow);
+  const publishedResults = await getPublishedResultsForHunt(hunt.id, hunt.dropAt);
+  const summary = await getPlayerResultSummary(hunt, submission, publishedResults);
+  if (!summary || !submission.storagePath) {
+    return null;
+  }
+
+  return {
+    shareId,
+    submissionId: submission.id,
+    challenge: hunt.challenge,
+    displayName: profileRow?.username ? String(profileRow.username) : submission.guestAlias,
+    overallRank: summary.overallRank,
+    totalRanked: summary.totalRanked,
+    isTopFive: summary.isTopFive,
+    acceptedAt: submission.acceptedAt ?? new Date().toISOString(),
+    imageUrl: `/api/result-assets/${shareId}`
+  };
+}
+
+export async function getSharedResultAsset(shareId: string) {
+  const shareRow = await getSharedResultRow(shareId);
+  if (!shareRow) {
+    return null;
+  }
+
+  const submissionRow = arrayValue((shareRow.submissions ?? null) as Row | Row[] | null);
+  const storagePath = submissionRow?.storage_path ? String(submissionRow.storage_path) : undefined;
+  const mimeType = submissionRow?.mime_type ? String(submissionRow.mime_type) : "image/jpeg";
+  if (!storagePath) {
+    return null;
+  }
+
+  const admin = requireAdmin();
+  const download = await admin.storage.from(DEFAULT_BUCKET).download(storagePath);
+  if (download.error) {
+    throw download.error;
+  }
+
+  return {
+    mimeType,
+    buffer: Buffer.from(await download.data.arrayBuffer())
+  };
+}
 export async function setReminder(identityId: string, enabled: boolean, email?: string) {
   const admin = requireAdmin();
   const { data: profile } = await admin.from("profiles").select("id,email").eq("id", identityId).maybeSingle();
@@ -550,7 +765,7 @@ export async function updateHunt(input: { challenge: string; challengeHint: stri
       approved_source: input.approvedSource,
       drop_at: new Date(now + 1000 * 60 * 60 * 3).toISOString(),
       closes_at: new Date(now + 1000 * 60 * 60 * 4).toISOString(),
-      results_at: new Date(now + 1000 * 60 * 60 * 5).toISOString(),
+      results_at: new Date(now + 1000 * 60 * 60 * 4).toISOString(),
       status: "scheduled"
     }).select("*").single();
 
@@ -624,14 +839,10 @@ export async function listReminderRecipients() {
   return Array.from(emails).map((email) => ({ email }));
 }
 
-export async function publishResults() {
+async function publishResultsForHunt(hunt: Hunt) {
   const admin = requireAdmin();
-  const hunt = await getCurrentHunt();
-  if (!hunt.id || hunt.id === "fallback-hunt") {
-    return [];
-  }
-
   const existing = await getPublishedResultsForHunt(hunt.id, hunt.dropAt);
+
   if (existing.length === 0) {
     const { data: candidates, error } = await admin
       .from("submissions")
@@ -666,6 +877,40 @@ export async function publishResults() {
   }
 
   return getPublishedResultsForHunt(hunt.id, hunt.dropAt);
+}
+
+export async function publishResults() {
+  const hunt = await getCurrentHunt();
+  if (!hunt.id || hunt.id === "fallback-hunt") {
+    return [];
+  }
+
+  return publishResultsForHunt(hunt);
+}
+
+export async function publishDueResults() {
+  const admin = requireAdmin();
+  const nowIso = new Date().toISOString();
+  const { data, error } = await admin
+    .from("hunts")
+    .select("*")
+    .lte("results_at", nowIso)
+    .neq("status", "results_published")
+    .order("results_at", { ascending: true })
+    .limit(10);
+
+  if (error) {
+    throw error;
+  }
+
+  const published = [] as Array<{ huntId: string; publishedCount: number }>;
+  for (const row of (data ?? []) as Row[]) {
+    const hunt = asHunt(row, await countSubmissions(String(row.id)));
+    const results = await publishResultsForHunt(hunt);
+    published.push({ huntId: hunt.id, publishedCount: results.length });
+  }
+
+  return published;
 }
 
 export async function reviewSubmission(input: ReviewSubmissionInput) {

@@ -33,6 +33,15 @@ export const repository = {
   async getLeaderboardData(...args: Parameters<typeof mockRepository.getLeaderboardData>) {
     return useSupabase() ? supabaseRepository.getLeaderboardData(...args) : mockRepository.getLeaderboardData(...args);
   },
+  async createResultShare(...args: Parameters<typeof mockRepository.createResultShare>) {
+    return useSupabase() ? supabaseRepository.createResultShare(...args) : mockRepository.createResultShare(...args);
+  },
+  async getPublicResultPageData(...args: Parameters<typeof mockRepository.getPublicResultPageData>) {
+    return useSupabase() ? supabaseRepository.getPublicResultPageData(...args) : mockRepository.getPublicResultPageData(...args);
+  },
+  async getSharedResultAsset(...args: Parameters<typeof mockRepository.getSharedResultAsset>) {
+    return useSupabase() ? supabaseRepository.getSharedResultAsset(...args) : mockRepository.getSharedResultAsset(...args);
+  },
   async getSubmissionSummary() {
     return useSupabase() ? supabaseRepository.getSubmissionSummary() : mockRepository.getSubmissionSummary();
   },
@@ -44,6 +53,9 @@ export const repository = {
   },
   async publishResults() {
     return useSupabase() ? supabaseRepository.publishResults() : mockRepository.publishResults();
+  },
+  async publishDueResults() {
+    return useSupabase() ? supabaseRepository.publishDueResults() : mockRepository.publishDueResults();
   },
   async reviewSubmission(...args: Parameters<typeof mockRepository.reviewSubmission>) {
     return useSupabase() ? supabaseRepository.reviewSubmission(...args) : mockRepository.reviewSubmission(...args);

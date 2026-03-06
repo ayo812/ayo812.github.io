@@ -35,7 +35,9 @@ create table if not exists public.submissions (
   captured_at timestamptz,
   accepted_at timestamptz,
   moderation_status text not null default 'pending' check (moderation_status in ('pending', 'approved', 'flagged', 'blocked')),
+  moderation_details jsonb,
   verification_status text not null default 'pending' check (verification_status in ('pending', 'verified', 'needs_manual_review', 'rejected')),
+  verification_details jsonb,
   review_notes text,
   created_at timestamptz not null default now(),
   unique (hunt_id, identity_key)
@@ -49,6 +51,13 @@ create table if not exists public.daily_results (
   published_at timestamptz not null default now(),
   unique (hunt_id, rank),
   unique (submission_id)
+);
+
+create table if not exists public.shared_results (
+  id uuid primary key default gen_random_uuid(),
+  share_id text not null unique,
+  submission_id uuid not null unique references public.submissions(id) on delete cascade,
+  created_at timestamptz not null default now()
 );
 
 create table if not exists public.challenge_suggestions (
@@ -88,5 +97,6 @@ alter table public.hunts enable row level security;
 alter table public.profiles enable row level security;
 alter table public.submissions enable row level security;
 alter table public.daily_results enable row level security;
+alter table public.shared_results enable row level security;
 alter table public.challenge_suggestions enable row level security;
 alter table public.reminder_subscriptions enable row level security;

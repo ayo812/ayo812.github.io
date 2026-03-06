@@ -30,3 +30,28 @@ Original prompt: PLEASE IMPLEMENT THIS PLAN for scaveng.io as a mobile-first Nex
 - Fixed stray literal newline markers left in repository import headers from an earlier patch.
 - Replaced the invalid Supabase cookie type import with a local cookie-shape type and typed the middleware cookie callback explicitly.
 - Cleaned build artifacts again and updated README to document EXIF freshness checks and the new SCAVENG_ADMIN_EMAILS-based admin access model.
+- Expanded submission typing to carry structured verification and moderation artifacts, and extended the EXIF verifier to return machine-readable details instead of only a note string.
+- Updated the mock repository to carry structured moderation/verification artifacts and to support a mock due-results publication path for the new cron behavior.
+- Updated the Supabase repository to persist structured moderation/verification artifacts and to support scheduled due-result publication.
+- Added Playwright-based smoke coverage for the mobile guest flow, guest history prompt, unauthenticated admin redirect, and results cron publication.
+- Installed `@playwright/test`, added `playwright.config.ts`, stable build-backed `test:e2e` scripts, and a fixture upload image for mobile upload coverage.
+- Switched the Playwright web server from `next dev` to built `next start` because dev-mode module reloads reset the in-memory mock repository between submission intent and finalize.
+- Verified the E2E suite passes locally with `npm run test:e2e` after installing Chromium via `npx playwright install chromium`.
+- TODO: add signed-in Supabase-path E2E coverage once a stable local auth/storage test environment exists.
+- TODO: add admin review-path coverage for flagged submissions and a real storage-backed upload assertion when Supabase env vars are present.
+- Reworked timing so the public product now treats results as immediate at submission close instead of leaving a one-hour public gap.
+- Updated the home page to auto-refresh across the close boundary, expose a ranked result share card after `results-out`, and copy share text through Web Share or clipboard.
+- Added shared result-summary helpers plus repository support for per-player overall rank and share text in both mock and Supabase paths.
+- Updated the E2E suite to cover the immediate-results share flow and kept an internal `results-soon` state only for ops/cron smoke coverage.
+- Replaced the old result-code direction with lazy official share links, a public `/result/[shareId]` page, and a private result-asset proxy so trust comes from the canonical scaveng.io URL instead of copied text alone.
+- Added /api/results/share, /api/result-assets/[shareId], and /result/[shareId], plus repository support for lazy share-link creation and public verified result lookup.
+- Updated the Supabase schema with shared_results, updated the home share card to create links on demand, and refreshed the E2E suite for stable verified share URLs and 404 handling on invalid result links.
+- Added a test-only Web Share override flag so Playwright can force the clipboard branch while production browsers still prefer the native share sheet.
+- Verified the immediate-results and verified-sharing implementation with 
+pm run typecheck, 
+pm run build, and 
+pm run test:e2e.
+- Added lib/site.ts for canonical base-URL resolution across localhost, Vercel preview, Vercel production, and explicit APP_BASE_URL deployments.
+- Hardened /result/[shareId] metadata with canonical URLs, OG/Twitter unfurls based on the shared submission image, and 
+oindex privacy defaults for result pages/assets.
+- Added .env.example and ercel.json so Vercel env setup and cron registration are part of the repo instead of only README instructions.
